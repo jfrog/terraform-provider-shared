@@ -551,6 +551,18 @@ func StringIsNotEmpty(i interface{}, p cty.Path) diag.Diagnostics {
 	return diags
 }
 
+// A wrapper for the Terraform's original validation func:
+// https://github.com/hashicorp/terraform-plugin-sdk/blob/5adf5f1c4bf0aee7bb31d51cd7f016e81a39e3e5/helper/validation/strings.go#L132
+func StringInSlice(ignoreCase bool, strings ...string) schema.SchemaValidateDiagFunc {
+	return validation.ToDiagFunc(validation.StringInSlice(strings, ignoreCase))
+}
+
+// A wrapper for the Terraform's original validation func:
+// https://github.com/hashicorp/terraform-plugin-sdk/blob/5adf5f1c4bf0aee7bb31d51cd7f016e81a39e3e5/helper/validation/int.go#L31
+func InAtLeast(min int) schema.SchemaValidateDiagFunc {
+	return validation.ToDiagFunc(validation.IntAtLeast(min))
+}
+
 func LdapDn(value interface{}, _ cty.Path) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -579,16 +591,4 @@ func LdapFilter(value interface{}, _ cty.Path) diag.Diagnostics {
 	}
 
 	return diags
-}
-
-// A wrapper for the Terraform's original validation func:
-// https://github.com/hashicorp/terraform-plugin-sdk/blob/5adf5f1c4bf0aee7bb31d51cd7f016e81a39e3e5/helper/validation/strings.go#L132
-func StringInSlice(ignoreCase bool, strings ...string) schema.SchemaValidateDiagFunc {
-	return validation.ToDiagFunc(validation.StringInSlice(strings, ignoreCase))
-}
-
-// A wrapper for the Terraform's original validation func:
-// https://github.com/hashicorp/terraform-plugin-sdk/blob/5adf5f1c4bf0aee7bb31d51cd7f016e81a39e3e5/helper/validation/int.go#L31
-func InAtLeast(min int) schema.SchemaValidateDiagFunc {
-	return validation.ToDiagFunc(validation.IntAtLeast(min))
 }
