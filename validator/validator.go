@@ -580,3 +580,11 @@ func LdapFilter(value interface{}, _ cty.Path) diag.Diagnostics {
 
 	return diags
 }
+
+// StringInSlice returns a SchemaValidateFunc which tests if the provided value
+// is of type string and matches the value of an element in the valid slice
+// will test with in lower case if ignoreCase is true.
+// Modified version eliminates the need of wrapping for ValidateDiagFunc.
+func StringInSlice(ignoreCase bool, strings ...string) schema.SchemaValidateDiagFunc {
+	return validation.ToDiagFunc(validation.StringInSlice(strings, ignoreCase))
+}
