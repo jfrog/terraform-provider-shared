@@ -581,10 +581,14 @@ func LdapFilter(value interface{}, _ cty.Path) diag.Diagnostics {
 	return diags
 }
 
-// StringInSlice returns a SchemaValidateFunc which tests if the provided value
-// is of type string and matches the value of an element in the valid slice
-// will test with in lower case if ignoreCase is true.
-// Modified version eliminates the need of wrapping for ValidateDiagFunc.
+// A wrapper for the Terraform's original validation func:
+// https://github.com/hashicorp/terraform-plugin-sdk/blob/5adf5f1c4bf0aee7bb31d51cd7f016e81a39e3e5/helper/validation/strings.go#L132
 func StringInSlice(ignoreCase bool, strings ...string) schema.SchemaValidateDiagFunc {
 	return validation.ToDiagFunc(validation.StringInSlice(strings, ignoreCase))
+}
+
+// A wrapper for the Terraform's original validation func:
+// https://github.com/hashicorp/terraform-plugin-sdk/blob/5adf5f1c4bf0aee7bb31d51cd7f016e81a39e3e5/helper/validation/int.go#L31
+func InAtLeast(min int) schema.SchemaValidateDiagFunc {
+	return validation.ToDiagFunc(validation.IntAtLeast(min))
 }
