@@ -1,3 +1,9 @@
+## 0.2.1 (May 4, 2022)
+
+IMPROVEMENT:
+
+* Filter out Call Home request 413 error for logging.
+
 ## 0.2.0 (Apr 29, 2022)
 
 NEW FEATURES:
