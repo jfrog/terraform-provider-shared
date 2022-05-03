@@ -240,7 +240,7 @@ func lookup(payload interface{}, predicate HclPredicate) map[string]interface{} 
 	return values
 }
 
-func SendUsage(ctx context.Context, client *resty.Client, version, featureUsage string) {
+func SendUsage(ctx context.Context, client *resty.Client, version string, featureUsages ...string) {
 	type Feature struct {
 		FeatureId string `json:"featureId"`
 	}
@@ -249,12 +249,17 @@ func SendUsage(ctx context.Context, client *resty.Client, version, featureUsage 
 		Features  []Feature `json:"features"`
 	}
 
+	features := []Feature{
+		{FeatureId: "Partner/ACC-007450"},
+	}
+
+	for _, featureUsage := range featureUsages {
+		features = append(features, Feature{FeatureId: featureUsage} )
+	}
+
 	usage := UsageStruct{
 		"terraform-provider-artifactory/" + version,
-		[]Feature{
-			{FeatureId: "Partner/ACC-007450"},
-			{FeatureId: featureUsage},
-		},
+		features,
 	}
 
 	_, err := client.R().
