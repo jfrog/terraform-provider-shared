@@ -240,7 +240,7 @@ func lookup(payload interface{}, predicate HclPredicate) map[string]interface{} 
 	return values
 }
 
-func SendUsage(ctx context.Context, client *resty.Client, version string, featureUsages ...string) {
+func SendUsage(ctx context.Context, client *resty.Client, productId string, featureUsages ...string) {
 	type Feature struct {
 		FeatureId string `json:"featureId"`
 	}
@@ -257,10 +257,7 @@ func SendUsage(ctx context.Context, client *resty.Client, version string, featur
 		features = append(features, Feature{FeatureId: featureUsage} )
 	}
 
-	usage := UsageStruct{
-		"terraform-provider-artifactory/" + version,
-		features,
-	}
+	usage := UsageStruct{productId, features}
 
 	_, err := client.R().
 		SetBody(usage).
@@ -271,14 +268,14 @@ func SendUsage(ctx context.Context, client *resty.Client, version string, featur
 	}
 }
 
-func ApplyTelemetry(version, resource, verb string, f func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
+func ApplyTelemetry(productId, resource, verb string, f func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
 	if f == nil {
 		panic("attempt to apply telemetry to a nil function")
 	}
 	return func(ctx context.Context, data *schema.ResourceData, meta interface{}) diag.Diagnostics {
 		// best effort. Go routine it
 		featureUsage := fmt.Sprintf("Resource/%s/%s", resource, verb)
-		go SendUsage(ctx, meta.(*resty.Client), version, featureUsage)
+		go SendUsage(ctx, meta.(*resty.Client), productId, featureUsage)
 		return f(ctx, data, meta)
 	}
 }
