@@ -551,16 +551,79 @@ func StringIsNotEmpty(i interface{}, p cty.Path) diag.Diagnostics {
 	return diags
 }
 
-// A wrapper for the Terraform's original validation func:
+// Updated version of the Terraform's original validation func:
 // https://github.com/hashicorp/terraform-plugin-sdk/blob/5adf5f1c4bf0aee7bb31d51cd7f016e81a39e3e5/helper/validation/strings.go#L132
-func StringInSlice(ignoreCase bool, strings ...string) schema.SchemaValidateDiagFunc {
-	return validation.ToDiagFunc(validation.StringInSlice(strings, ignoreCase))
+//
+// StringInSlice returns a SchemaValidateFunc which tests if the provided value
+// is of type string and matches the value of an element in the valid slice
+// will test with in lower case if ignoreCase is true
+func StringInSlice(ignoreCase bool, valid ...string) schema.SchemaValidateDiagFunc {
+	return func(i interface{}, p cty.Path) diag.Diagnostics {
+		var diags diag.Diagnostics
+
+		v, ok := i.(string)
+		attr := p[len(p)-1].(cty.GetAttrStep)
+
+		if !ok {
+			diags = append(diags, diag.Diagnostic{
+				Severity:      diag.Error,
+				Summary:       "Invalid string",
+				AttributePath: p,
+				Detail:        fmt.Sprintf("expected type of %q to be string", attr.Name),
+			})
+			return diags
+		}
+
+		for _, str := range valid {
+			if v == str || (ignoreCase && strings.EqualFold(v, str)) {
+				return diags
+			}
+		}
+
+		diags = append(diags, diag.Diagnostic{
+			Severity:      diag.Error,
+			Summary:       "Invalid string",
+			AttributePath: p,
+			Detail:        fmt.Sprintf("expected %s to be one of %v, got %s", attr.Name, valid, v),
+		})
+		return diags
+	}
 }
 
-// A wrapper for the Terraform's original validation func:
+// Updated version of the Terraform's original validation func:
 // https://github.com/hashicorp/terraform-plugin-sdk/blob/5adf5f1c4bf0aee7bb31d51cd7f016e81a39e3e5/helper/validation/int.go#L31
-func InAtLeast(min int) schema.SchemaValidateDiagFunc {
-	return validation.ToDiagFunc(validation.IntAtLeast(min))
+//
+// IntAtLeast returns a SchemaValidateFunc which tests if the provided value
+// is of type int and is at least min (inclusive)
+func IntAtLeast(min int) schema.SchemaValidateDiagFunc {
+	return func(i interface{}, p cty.Path) diag.Diagnostics {
+		var diags diag.Diagnostics
+
+		v, ok := i.(int)
+		attr := p[len(p)-1].(cty.GetAttrStep)
+
+		if !ok {
+			diags = append(diags, diag.Diagnostic{
+				Severity:      diag.Error,
+				Summary:       "Invalid integer",
+				AttributePath: p,
+				Detail:        fmt.Sprintf("expected type of %q to be integer", attr.Name),
+			})
+			return diags
+		}
+
+		if v < min {
+			diags = append(diags, diag.Diagnostic{
+				Severity:      diag.Error,
+				Summary:       "Invalid integer",
+				AttributePath: p,
+				Detail:        fmt.Sprintf("expected %s to be at least (%d), got %d", attr.Name, min, v),
+			})
+			return diags
+		}
+
+		return diags
+	}
 }
 
 func LdapDn(value interface{}, _ cty.Path) diag.Diagnostics {
