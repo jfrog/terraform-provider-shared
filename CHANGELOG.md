@@ -1,8 +1,8 @@
-## 0.2.1 (May 4, 2022)
+## 0.3.0 (May 4, 2022)
 
-IMPROVEMENT:
+NEW FEATURES:
 
-* Filter out Call Home request 413 error for logging.
+* Add `util.ApplyTelemetry()` and `util.SendUsage()`
 
 ## 0.2.0 (Apr 29, 2022)
 

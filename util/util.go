@@ -1,12 +1,16 @@
 package util
 
 import (
+	"context"
 	"fmt"
 	"reflect"
 	"regexp"
 	"sort"
 	"strings"
 
+	"github.com/go-resty/resty/v2"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -234,4 +238,42 @@ func lookup(payload interface{}, predicate HclPredicate) map[string]interface{} 
 		}
 	}
 	return values
+}
+
+func SendUsage(ctx context.Context, client *resty.Client, version, featureUsage string) {
+	type Feature struct {
+		FeatureId string `json:"featureId"`
+	}
+	type UsageStruct struct {
+		ProductId string    `json:"productId"`
+		Features  []Feature `json:"features"`
+	}
+
+	usage := UsageStruct{
+		"terraform-provider-artifactory/" + version,
+		[]Feature{
+			{FeatureId: "Partner/ACC-007450"},
+			{FeatureId: featureUsage},
+		},
+	}
+
+	_, err := client.R().
+		SetBody(usage).
+		Post("artifactory/api/system/usage")
+
+	if err != nil {
+		tflog.Info(ctx, fmt.Sprintf("failed to send usage: %v", err))
+	}
+}
+
+func ApplyTelemetry(version, resource, verb string, f func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
+	if f == nil {
+		panic("attempt to apply telemetry to a nil function")
+	}
+	return func(ctx context.Context, data *schema.ResourceData, meta interface{}) diag.Diagnostics {
+		// best effort. Go routine it
+		featureUsage := fmt.Sprintf("Resource/%s/%s", resource, verb)
+		go SendUsage(ctx, meta.(*resty.Client), version, featureUsage)
+		return f(ctx, data, meta)
+	}
 }
