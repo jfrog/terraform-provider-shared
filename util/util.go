@@ -268,7 +268,7 @@ func SendUsage(ctx context.Context, client *resty.Client, productId string, feat
 	}
 }
 
-func ApplyTelemetry(productId, resource, verb string, f func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
+func applyTelemetry(productId, resource, verb string, f func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
 	if f == nil {
 		panic("attempt to apply telemetry to a nil function")
 	}
@@ -278,4 +278,72 @@ func ApplyTelemetry(productId, resource, verb string, f func(context.Context, *s
 		go SendUsage(ctx, meta.(*resty.Client), productId, featureUsage)
 		return f(ctx, data, meta)
 	}
+}
+
+
+func AddTelemetry(productId string, resourceMap map[string]*schema.Resource) map[string]*schema.Resource {
+	for name, skeema := range resourceMap {
+		if skeema.Create != nil {
+			panic(fmt.Sprintf("[%s] deprecated Create function in use", name))
+		}
+		if skeema.Read != nil {
+			panic(fmt.Sprintf("[%s] deprecated Read function in use", name))
+		}
+		if skeema.Update != nil {
+			panic(fmt.Sprintf("[%s] deprecated Update function in use", name))
+		}
+		if skeema.Delete != nil {
+			panic(fmt.Sprintf("[%s] deprecated Delete function in use", name))
+		}
+	}
+
+	for name, skeema := range resourceMap {
+		if skeema.CreateContext != nil {
+			skeema.CreateContext = applyTelemetry(productId, name, "CREATE", skeema.CreateContext)
+		}
+		if skeema.ReadContext != nil {
+			skeema.ReadContext = applyTelemetry(productId, name, "READ", skeema.ReadContext)
+		}
+		if skeema.UpdateContext != nil {
+			skeema.UpdateContext = applyTelemetry(productId, name, "UPDATE", skeema.UpdateContext)
+		}
+		if skeema.DeleteContext != nil {
+			skeema.DeleteContext = applyTelemetry(productId, name, "DELETE", skeema.DeleteContext)
+		}
+	}
+	return resourceMap
+}
+
+func CheckArtifactoryLicense(client *resty.Client) diag.Diagnostics {
+
+	type License struct {
+		Type string `json:"type"`
+	}
+
+	type LicensesWrapper struct {
+		License
+		Licenses []License `json:"licenses"` // HA licenses returns as an array instead
+	}
+
+	licensesWrapper := LicensesWrapper{}
+	_, err := client.R().
+		SetResult(&licensesWrapper).
+		Get("/artifactory/api/system/license")
+
+	if err != nil {
+		return diag.Errorf("Failed to check for license. %s", err)
+	}
+
+	var licenseType string
+	if len(licensesWrapper.Licenses) > 0 {
+		licenseType = licensesWrapper.Licenses[0].Type
+	} else {
+		licenseType = licensesWrapper.Type
+	}
+
+	if matched, _ := regexp.MatchString(`Enterprise`, licenseType); !matched {
+		return diag.Errorf("Artifactory Projects requires Enterprise license to work with Terraform!")
+	}
+
+	return nil
 }
