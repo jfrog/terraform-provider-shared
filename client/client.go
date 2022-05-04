@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strings"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -18,16 +19,26 @@ func Build(URL, version string) (*resty.Client, error) {
 
 	baseUrl := fmt.Sprintf("%s://%s", u.Scheme, u.Host)
 
-	restyBase := resty.New().SetHostURL(baseUrl).OnAfterResponse(func(client *resty.Client, response *resty.Response) error {
-		if response == nil {
-			return fmt.Errorf("no response found")
-		}
+	restyBase := resty.New().
+		SetHostURL(baseUrl).
+		OnAfterResponse(func(client *resty.Client, response *resty.Response) error {
+			if response == nil {
+				return fmt.Errorf("no response found")
+			}
 
-		if response.StatusCode() >= http.StatusBadRequest {
-			return fmt.Errorf("\n%d %s %s\n%s", response.StatusCode(), response.Request.Method, response.Request.URL, string(response.Body()[:]))
-		}
-		return nil
-	}).
+			// Don't log the response if we have 413 erorr from call home request
+			// This happens when we make request to call home endpoint too frequently
+			// for Artifactory to aggregate. Generally only happens during test execution
+			if strings.Contains(response.Request.URL, "artifactory/api/system/usage") &&
+				response.StatusCode() == http.StatusRequestEntityTooLarge {
+				return nil
+			}
+
+			if response.StatusCode() >= http.StatusBadRequest {
+				return fmt.Errorf("\n%d %s %s\n%s", response.StatusCode(), response.Request.Method, response.Request.URL, string(response.Body()[:]))
+			}
+			return nil
+		}).
 		SetHeader("content-type", "application/json").
 		SetHeader("accept", "*/*").
 		SetHeader("user-agent", "jfrog/terraform-provider-artifactory:"+version).

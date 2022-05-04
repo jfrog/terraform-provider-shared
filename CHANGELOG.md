@@ -1,3 +1,9 @@
+## 0.3.0 (May 4, 2022)
+
+NEW FEATURES:
+
+* Add `util.ApplyTelemetry()` and `util.SendUsage()`
+
 ## 0.2.0 (Apr 29, 2022)
 
 NEW FEATURES:
