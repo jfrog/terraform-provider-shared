@@ -1,8 +1,14 @@
-## 0.3.0 (May 4, 2022)
+## 0.4.0 (May 4, 2022)
 
 NEW FEATURES:
 
 * Add `util.ApplyTelemetry()` and `util.SendUsage()`
+
+## 0.3.0 (May 2, 2022)
+
+NEW FEATURES:
+
+* Add `StringInSlice()` and `IntAtLeast()` to `validator` package
 
 ## 0.2.0 (Apr 29, 2022)
 
