@@ -1,3 +1,9 @@
+## 0.5.0 (May 4, 2022)
+
+NEW FEATURES:
+
+* Add `util.AddTelemetry()` and `util.CheckArtifactoryLicense()`
+
 ## 0.4.0 (May 4, 2022)
 
 NEW FEATURES:
