@@ -3,7 +3,6 @@ package validator
 import (
 	"fmt"
 	"net/mail"
-	"net/url"
 	"regexp"
 	"strings"
 
@@ -529,13 +528,14 @@ func All(validators ...schema.SchemaValidateDiagFunc) schema.SchemaValidateDiagF
 // https://github.com/hashicorp/terraform-plugin-sdk/blob/main/helper/validation/strings.go#L14
 func StringIsNotEmpty(i interface{}, p cty.Path) diag.Diagnostics {
 	var diags diag.Diagnostics
+	attr := p[len(p)-1].(cty.GetAttrStep)
 
 	v, ok := i.(string)
 	if !ok {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "Invalid string",
-			Detail:   fmt.Sprintf("expected type of %q to be string", p),
+			Detail:   fmt.Sprintf("expected type of %q to be string", attr.Name),
 		})
 		return diags
 	}
@@ -544,7 +544,7 @@ func StringIsNotEmpty(i interface{}, p cty.Path) diag.Diagnostics {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "Invalid string",
-			Detail:   fmt.Sprintf("expected %q to not be an empty string, got %v", p, i),
+			Detail:   fmt.Sprintf("expected %q to not be an empty string", attr.Name),
 		})
 		return diags
 	}
@@ -591,38 +591,17 @@ func StringInSlice(ignoreCase bool, valid ...string) schema.SchemaValidateDiagFu
 	}
 }
 
-// StringIsNotURL copies mostly from IsURLWithSchema from https://github.com/hashicorp/terraform-plugin-sdk/blob/main/helper/validation/web.go#L22
-// but inverse the URL parsing check
 func StringIsNotURL(value interface{}, p cty.Path) diag.Diagnostics {
 	var diags diag.Diagnostics
-	v, ok := value.(string)
 	attr := p[len(p)-1].(cty.GetAttrStep)
 
-	if !ok {
+	_, errs := validation.IsURLWithHTTPorHTTPS(value, attr.Name)
+	if len(errs) == 0 {
 		diags = append(diags, diag.Diagnostic{
 			Severity:      diag.Error,
 			Summary:       "Invalid string",
 			AttributePath: p,
-			Detail:        fmt.Sprintf("expected type of %q to be string", attr.Name),
-		})
-	}
-
-	if v == "" {
-		diags = append(diags, diag.Diagnostic{
-			Severity:      diag.Error,
-			Summary:       "Invalid string",
-			AttributePath: p,
-			Detail:        fmt.Sprintf("expected %q url to not be empty, got %v", attr.Name, v),
-		})
-	}
-
-	_, err := url.Parse(v)
-	if err == nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity:      diag.Error,
-			Summary:       "Invalid string",
-			AttributePath: p,
-			Detail:        fmt.Sprintf("expected %q not to be a valid url, got %v", attr.Name, v),
+			Detail:        fmt.Sprintf("expected %q not to be a valid url, got %v", attr.Name, value),
 		})
 	}
 
