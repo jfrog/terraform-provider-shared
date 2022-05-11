@@ -1,3 +1,9 @@
+## 0.7.0 (May 11, 2022)
+
+BUG FIXES:
+
+* `util.CheckArtifactoryLicense`: Fix only checking for `Enterprise` license type. Now support a list of license types to check.
+
 ## 0.6.0 (May 11, 2022)
 
 NEW FEATURES:
