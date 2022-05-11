@@ -314,7 +314,10 @@ func AddTelemetry(productId string, resourceMap map[string]*schema.Resource) map
 	return resourceMap
 }
 
-func CheckArtifactoryLicense(client *resty.Client) diag.Diagnostics {
+func CheckArtifactoryLicense(client *resty.Client, licenseTypesToCheck ...string) diag.Diagnostics {
+	if len(licenseTypesToCheck) == 0 {
+		return diag.Errorf("missing licenseTypesToCheck")
+	}
 
 	type License struct {
 		Type string `json:"type"`
@@ -331,7 +334,7 @@ func CheckArtifactoryLicense(client *resty.Client) diag.Diagnostics {
 		Get("/artifactory/api/system/license")
 
 	if err != nil {
-		return diag.Errorf("Failed to check for license. %s", err)
+		return fmt.Errorf("Failed to check for license. If your usage doesn't require admin permission, you can set `check_license` attribute to `false` to skip this check. %s", err)
 	}
 
 	var licenseType string
@@ -341,8 +344,10 @@ func CheckArtifactoryLicense(client *resty.Client) diag.Diagnostics {
 		licenseType = licensesWrapper.Type
 	}
 
-	if matched, _ := regexp.MatchString(`Enterprise`, licenseType); !matched {
-		return diag.Errorf("Artifactory Projects requires Enterprise license to work with Terraform!")
+	licenseTypesToCheckRegex := fmt.Sprintf("(?:%s)", strings.Join(licenseTypesToCheck, '|'))
+	if matched, _ := regexp.MatchString(licenseTypesToCheckRegex, licenseType); !matched {
+		licenseTypesToCheckMessage := strings.Join(licenseTypesToCheck, ' or ')
+		return fmt.Errorf("Artifactory requires %s license to work with Terraform! If your usage doesn't require a license, you can set `check_license` attribute to `false` to skip this check.", licenseTypesToCheckMessage)
 	}
 
 	return nil
