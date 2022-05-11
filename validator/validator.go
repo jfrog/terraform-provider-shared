@@ -3,6 +3,7 @@ package validator
 import (
 	"fmt"
 	"net/mail"
+	"net/url"
 	"regexp"
 	"strings"
 
@@ -588,6 +589,44 @@ func StringInSlice(ignoreCase bool, valid ...string) schema.SchemaValidateDiagFu
 		})
 		return diags
 	}
+}
+
+// StringIsNotURL copies mostly from IsURLWithSchema from https://github.com/hashicorp/terraform-plugin-sdk/blob/main/helper/validation/web.go#L22
+// but inverse the URL parsing check
+func StringIsNotURL(value interface{}, p cty.Path) diag.Diagnostics {
+	var diags diag.Diagnostics
+	v, ok := value.(string)
+	attr := p[len(p)-1].(cty.GetAttrStep)
+
+	if !ok {
+		diags = append(diags, diag.Diagnostic{
+			Severity:      diag.Error,
+			Summary:       "Invalid string",
+			AttributePath: p,
+			Detail:        fmt.Sprintf("expected type of %q to be string", attr.Name),
+		})
+	}
+
+	if v == "" {
+		diags = append(diags, diag.Diagnostic{
+			Severity:      diag.Error,
+			Summary:       "Invalid string",
+			AttributePath: p,
+			Detail:        fmt.Sprintf("expected %q url to not be empty, got %v", attr.Name, v),
+		})
+	}
+
+	_, err := url.Parse(v)
+	if err == nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity:      diag.Error,
+			Summary:       "Invalid string",
+			AttributePath: p,
+			Detail:        fmt.Sprintf("expected %q not to be a valid url, got %v", attr.Name, v),
+		})
+	}
+
+	return diags
 }
 
 // Updated version of the Terraform's original validation func:
