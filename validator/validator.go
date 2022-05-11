@@ -528,13 +528,14 @@ func All(validators ...schema.SchemaValidateDiagFunc) schema.SchemaValidateDiagF
 // https://github.com/hashicorp/terraform-plugin-sdk/blob/main/helper/validation/strings.go#L14
 func StringIsNotEmpty(i interface{}, p cty.Path) diag.Diagnostics {
 	var diags diag.Diagnostics
+	attr := p[len(p)-1].(cty.GetAttrStep)
 
 	v, ok := i.(string)
 	if !ok {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "Invalid string",
-			Detail:   fmt.Sprintf("expected type of %q to be string", p),
+			Detail:   fmt.Sprintf("expected type of %q to be string", attr.Name),
 		})
 		return diags
 	}
@@ -543,7 +544,7 @@ func StringIsNotEmpty(i interface{}, p cty.Path) diag.Diagnostics {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "Invalid string",
-			Detail:   fmt.Sprintf("expected %q to not be an empty string, got %v", p, i),
+			Detail:   fmt.Sprintf("expected %q to not be an empty string", attr.Name),
 		})
 		return diags
 	}
@@ -588,6 +589,23 @@ func StringInSlice(ignoreCase bool, valid ...string) schema.SchemaValidateDiagFu
 		})
 		return diags
 	}
+}
+
+func StringIsNotURL(value interface{}, p cty.Path) diag.Diagnostics {
+	var diags diag.Diagnostics
+	attr := p[len(p)-1].(cty.GetAttrStep)
+
+	_, errs := validation.IsURLWithHTTPorHTTPS(value, attr.Name)
+	if len(errs) == 0 {
+		diags = append(diags, diag.Diagnostic{
+			Severity:      diag.Error,
+			Summary:       "Invalid string",
+			AttributePath: p,
+			Detail:        fmt.Sprintf("expected %q not to be a valid url, got %v", attr.Name, value),
+		})
+	}
+
+	return diags
 }
 
 // Updated version of the Terraform's original validation func:

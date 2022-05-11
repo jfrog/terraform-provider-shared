@@ -1,3 +1,9 @@
+## 0.6.0 (May 11, 2022)
+
+NEW FEATURES:
+
+* Add `StringIsNotURL()` to `validator` package
+
 ## 0.5.0 (May 4, 2022)
 
 NEW FEATURES:
