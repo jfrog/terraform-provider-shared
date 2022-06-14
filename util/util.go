@@ -104,14 +104,7 @@ func MkLens(d *schema.ResourceData) Lens {
 
 type Schema map[string]*schema.Schema
 
-type HclPredicate func(hcl string) bool
 
-func SchemaHasKey(skeema map[string]*schema.Schema) HclPredicate {
-	return func(key string) bool {
-		_, ok := skeema[key]
-		return ok
-	}
-}
 
 func FormatCommaSeparatedString(thing interface{}) string {
 	fields := strings.Fields(thing.(string))
@@ -119,36 +112,10 @@ func FormatCommaSeparatedString(thing interface{}) string {
 	return strings.Join(fields, ",")
 }
 
-type PackFunc func(repo interface{}, d *schema.ResourceData) error
-
-// UniversalPack consider making this a function that takes a predicate of what to include and returns
-// a function that does the job. This would allow for the legacy code to specify which keys to keep and not
-func UniversalPack(predicate HclPredicate) PackFunc {
-
-	return func(payload interface{}, d *schema.ResourceData) error {
-		setValue := MkLens(d)
-
-		var errors []error
-
-		values := lookup(payload, predicate)
-
-		for hcl, value := range values {
-			if predicate != nil && predicate(hcl) {
-				errors = setValue(hcl, value)
-			}
-		}
-
-		if errors != nil && len(errors) > 0 {
-			return fmt.Errorf("failed saving state %q", errors)
-		}
-		return nil
-	}
-}
-
-// fieldToHcl this function is meant to use the HCL provided in the tag, or create a snake_case from the field name
+// FieldToHcl this function is meant to use the HCL provided in the tag, or create a snake_case from the field name
 // it actually works as expected, but dynamically working with these names was catching edge cases everywhere and
 // it was/is a time sink to catch.
-func fieldToHcl(field reflect.StructField) string {
+func FieldToHcl(field reflect.StructField) string {
 
 	if field.Tag.Get("hcl") != "" {
 		return field.Tag.Get("hcl")
@@ -163,81 +130,6 @@ func fieldToHcl(field reflect.StructField) string {
 	}
 	result := strings.Join(lowerFields, "_")
 	return result
-}
-
-type AutoMapper func(field reflect.StructField, thing reflect.Value) map[string]interface{}
-
-func findInspector(kind reflect.Kind) AutoMapper {
-	switch kind {
-	case reflect.Struct:
-		return func(f reflect.StructField, t reflect.Value) map[string]interface{} {
-			return lookup(t.Interface(), nil)
-		}
-	case reflect.Ptr:
-		return func(field reflect.StructField, thing reflect.Value) map[string]interface{} {
-			deref := reflect.Indirect(thing)
-			if deref.CanAddr() {
-				result := deref.Interface()
-				if deref.Kind() == reflect.Struct {
-					result = []interface{}{lookup(deref.Interface(), nil)}
-				}
-				return map[string]interface{}{
-					fieldToHcl(field): result,
-				}
-			}
-			return map[string]interface{}{}
-		}
-	case reflect.Slice:
-		return func(field reflect.StructField, thing reflect.Value) map[string]interface{} {
-			return map[string]interface{}{
-				fieldToHcl(field): CastToInterfaceArr(thing.Interface().([]string)),
-			}
-		}
-	}
-	return func(field reflect.StructField, thing reflect.Value) map[string]interface{} {
-		return map[string]interface{}{
-			fieldToHcl(field): thing.Interface(),
-		}
-	}
-}
-
-var allowAllPredicate = func(hcl string) bool {
-	return true
-}
-
-func lookup(payload interface{}, predicate HclPredicate) map[string]interface{} {
-
-	if predicate == nil {
-		predicate = allowAllPredicate
-	}
-
-	values := map[string]interface{}{}
-	var t = reflect.TypeOf(payload)
-	var v = reflect.ValueOf(payload)
-	if t.Kind() == reflect.Ptr {
-		t = t.Elem()
-		v = v.Elem()
-	}
-	for i := 0; i < t.NumField(); i++ {
-		field := t.Field(i)
-		thing := v.Field(i)
-
-		shouldLookup := true
-		if thing.Kind() != reflect.Struct {
-			hcl := fieldToHcl(field)
-			shouldLookup = predicate(hcl)
-		}
-
-		if shouldLookup {
-			typeInspector := findInspector(thing.Kind())
-			for key, value := range typeInspector(field, thing) {
-				if _, ok := values[key]; !ok {
-					values[key] = value
-				}
-			}
-		}
-	}
-	return values
 }
 
 func SendUsage(ctx context.Context, client *resty.Client, productId string, featureUsages ...string) {
@@ -352,3 +244,37 @@ func CheckArtifactoryLicense(client *resty.Client, licenseTypesToCheck ...string
 
 	return nil
 }
+
+
+// TODO universalUnpack - implement me
+// func universalUnpack(payload reflect.Type, s *schema.ResourceData) (interface{}, string, error) {
+// 	d := &util.ResourceData{ResourceData: s}
+// 	var t = reflect.TypeOf(payload)
+// 	var v = reflect.ValueOf(payload)
+// 	if t.Kind() == reflect.Ptr {
+// 		t = t.Elem()
+// 		v = v.Elem()
+// 	}
+//
+// 	for i := 0; i < t.NumField(); i++ {
+// 		thing := v.Field(i)
+//
+// 		switch thing.Kind() {
+// 		case reflect.String:
+// 			v.SetString(thing.String())
+// 		case reflect.Int:
+// 			v.SetInt(thing.Int())
+// 		case reflect.Bool:
+// 			v.SetBool(thing.Bool())
+// 		}
+// 	}
+// 	result := KeyPairPayLoad{
+// 		PairName:    d.GetString("pair_name", false),
+// 		PairType:    d.GetString("pair_type", false),
+// 		Alias:       d.GetString("alias", false),
+// 		PrivateKey:  strings.ReplaceAll(d.GetString("private_key", false), "\t", ""),
+// 		PublicKey:   strings.ReplaceAll(d.GetString("public_key", false), "\t", ""),
+// 		Unavailable: d.GetBool("unavailable", false),
+// 	}
+// 	return &result, result.PairName, nil
+// }

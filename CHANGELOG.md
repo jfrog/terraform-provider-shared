@@ -1,3 +1,9 @@
+## 1.0.0 (June 14, 2022)
+
+REFACTOR:
+
+* `util`.
+
 ## 0.7.0 (May 11, 2022)
 
 BUG FIXES:
@@ -32,7 +38,7 @@ NEW FEATURES:
 
 NEW FEATURES:
 
-* Add `test.ExecuteTemplate()` and `util.UniversalPack()`
+* Add `test.ExecuteTemplate()` and `packer.Universal()`
 
 ## 0.1.0 (Apr 28, 2022)
 
