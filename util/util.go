@@ -104,8 +104,6 @@ func MkLens(d *schema.ResourceData) Lens {
 
 type Schema map[string]*schema.Schema
 
-
-
 func FormatCommaSeparatedString(thing interface{}) string {
 	fields := strings.Fields(thing.(string))
 	sort.Strings(fields)
@@ -146,7 +144,7 @@ func SendUsage(ctx context.Context, client *resty.Client, productId string, feat
 	}
 
 	for _, featureUsage := range featureUsages {
-		features = append(features, Feature{FeatureId: featureUsage} )
+		features = append(features, Feature{FeatureId: featureUsage})
 	}
 
 	usage := UsageStruct{productId, features}
@@ -171,7 +169,6 @@ func applyTelemetry(productId, resource, verb string, f func(context.Context, *s
 		return f(ctx, data, meta)
 	}
 }
-
 
 func AddTelemetry(productId string, resourceMap map[string]*schema.Resource) map[string]*schema.Resource {
 	for name, skeema := range resourceMap {
@@ -244,7 +241,6 @@ func CheckArtifactoryLicense(client *resty.Client, licenseTypesToCheck ...string
 
 	return nil
 }
-
 
 // TODO universalUnpack - implement me
 // func universalUnpack(payload reflect.Type, s *schema.ResourceData) (interface{}, string, error) {

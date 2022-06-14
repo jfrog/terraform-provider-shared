@@ -24,12 +24,12 @@ func Any(predicates ...HclPredicate) HclPredicate {
 		return false
 	}
 }
+
 var True = func(hcl string) bool {
 	return true
 }
 var NoClass = Ignore("class", "rclass")
 var NoPassword = Ignore("password")
-
 
 func Ignore(names ...string) HclPredicate {
 	set := map[string]interface{}{}

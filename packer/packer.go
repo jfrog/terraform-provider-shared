@@ -1,10 +1,11 @@
 package packer
 
 import (
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/jfrog/terraform-provider-shared/predicate"
 	"github.com/jfrog/terraform-provider-shared/util"
+
+	"fmt"
 	"reflect"
 )
 

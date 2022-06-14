@@ -40,7 +40,7 @@ NEW FEATURES:
 
 NEW FEATURES:
 
-* Add `test.ExecuteTemplate()` and `packer.Universal()`
+* Add `test.ExecuteTemplate()` and `util.UniversalPack()`
 
 ## 0.1.0 (Apr 28, 2022)
 

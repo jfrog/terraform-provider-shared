@@ -508,7 +508,7 @@ func IsEmail(address interface{}, _ cty.Path) diag.Diagnostics {
 	return diags
 }
 
-// Updated version of the Terraform's original validation func:
+// All Updated version of the Terraform's original validation func:
 // https://github.com/hashicorp/terraform-plugin-sdk/blob/main/helper/validation/meta.go#L32
 //
 // All returns a SchemaValidateFunc which tests if the provided value
@@ -524,7 +524,7 @@ func All(validators ...schema.SchemaValidateDiagFunc) schema.SchemaValidateDiagF
 	}
 }
 
-// Updated version of the Terraform's original validation func:
+// StringIsNotEmpty Updated version of the Terraform's original validation func:
 // https://github.com/hashicorp/terraform-plugin-sdk/blob/main/helper/validation/strings.go#L14
 func StringIsNotEmpty(i interface{}, p cty.Path) diag.Diagnostics {
 	var diags diag.Diagnostics
@@ -608,7 +608,7 @@ func StringIsNotURL(value interface{}, p cty.Path) diag.Diagnostics {
 	return diags
 }
 
-// Updated version of the Terraform's original validation func:
+// IntAtLeast Updated version of the Terraform's original validation func:
 // https://github.com/hashicorp/terraform-plugin-sdk/blob/5adf5f1c4bf0aee7bb31d51cd7f016e81a39e3e5/helper/validation/int.go#L31
 //
 // IntAtLeast returns a SchemaValidateFunc which tests if the provided value
