@@ -33,7 +33,7 @@ func Universal(predicate predicate.HclPredicate) PackFunc {
 		return nil
 	}
 }
-func ComposePacker(packers ...PackFunc) PackFunc {
+func Compose(packers ...PackFunc) PackFunc {
 	return func(repo interface{}, d *schema.ResourceData) error {
 		var errors []error
 
@@ -50,7 +50,7 @@ func ComposePacker(packers ...PackFunc) PackFunc {
 	}
 }
 
-func DefaultPacker(skeema map[string]*schema.Schema) PackFunc {
+func Default(skeema map[string]*schema.Schema) PackFunc {
 	return Universal(
 		predicate.All(
 			predicate.SchemaHasKey(skeema),
