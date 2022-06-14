@@ -2,7 +2,9 @@
 
 REFACTOR:
 
-* `util`.
+* `util` package stripped down. Predicates moved to `predicate` packages and packers to `packer` package. 
+* Some remainder of sharable code from artifactory code was moved in.
+* `NoPassword` predicate now no longer also includes `NoClass` - done for distinction and clarity
 
 ## 0.7.0 (May 11, 2022)
 
