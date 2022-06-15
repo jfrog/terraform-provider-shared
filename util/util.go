@@ -26,28 +26,28 @@ func (d *ResourceData) GetString(key string, onlyIfChanged bool) string {
 func BoolPtr(v bool) *bool { return &v }
 
 func (d *ResourceData) GetBoolRef(key string, onlyIfChanged bool) *bool {
-	if v, ok := d.GetOkExists(key); ok && (!onlyIfChanged || d.HasChange(key)) {
+	if v, ok := d.GetOk(key); ok && (!onlyIfChanged || d.HasChange(key)) {
 		return BoolPtr(v.(bool))
 	}
 	return nil
 }
 
 func (d *ResourceData) GetBool(key string, onlyIfChanged bool) bool {
-	if v, ok := d.GetOkExists(key); ok && (!onlyIfChanged || d.HasChange(key)) {
+	if v, ok := d.GetOk(key); ok && (!onlyIfChanged || d.HasChange(key)) {
 		return v.(bool)
 	}
 	return false
 }
 
 func (d *ResourceData) GetInt(key string, onlyIfChanged bool) int {
-	if v, ok := d.GetOkExists(key); ok && (!onlyIfChanged || d.HasChange(key)) {
+	if v, ok := d.GetOk(key); ok && (!onlyIfChanged || d.HasChange(key)) {
 		return v.(int)
 	}
 	return 0
 }
 
 func (d *ResourceData) GetSet(key string) []string {
-	if v, ok := d.GetOkExists(key); ok {
+	if v, ok := d.GetOk(key); ok {
 		arr := CastToStringArr(v.(*schema.Set).List())
 		return arr
 	}
@@ -55,7 +55,7 @@ func (d *ResourceData) GetSet(key string) []string {
 }
 
 func (d *ResourceData) GetList(key string) []string {
-	if v, ok := d.GetOkExists(key); ok {
+	if v, ok := d.GetOk(key); ok {
 		arr := CastToStringArr(v.([]interface{}))
 		return arr
 	}
@@ -242,35 +242,6 @@ func CheckArtifactoryLicense(client *resty.Client, licenseTypesToCheck ...string
 	return nil
 }
 
-// TODO universalUnpack - implement me
-// func universalUnpack(payload reflect.Type, s *schema.ResourceData) (interface{}, string, error) {
-// 	d := &util.ResourceData{ResourceData: s}
-// 	var t = reflect.TypeOf(payload)
-// 	var v = reflect.ValueOf(payload)
-// 	if t.Kind() == reflect.Ptr {
-// 		t = t.Elem()
-// 		v = v.Elem()
-// 	}
-//
-// 	for i := 0; i < t.NumField(); i++ {
-// 		thing := v.Field(i)
-//
-// 		switch thing.Kind() {
-// 		case reflect.String:
-// 			v.SetString(thing.String())
-// 		case reflect.Int:
-// 			v.SetInt(thing.Int())
-// 		case reflect.Bool:
-// 			v.SetBool(thing.Bool())
-// 		}
-// 	}
-// 	result := KeyPairPayLoad{
-// 		PairName:    d.GetString("pair_name", false),
-// 		PairType:    d.GetString("pair_type", false),
-// 		Alias:       d.GetString("alias", false),
-// 		PrivateKey:  strings.ReplaceAll(d.GetString("private_key", false), "\t", ""),
-// 		PublicKey:   strings.ReplaceAll(d.GetString("public_key", false), "\t", ""),
-// 		Unavailable: d.GetBool("unavailable", false),
-// 	}
-// 	return &result, result.PairName, nil
-// }
+type Identifiable interface {
+	Id() string
+}

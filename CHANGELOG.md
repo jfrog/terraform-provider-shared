@@ -1,3 +1,11 @@
+## 1.0.1 (June 14, 2022)
+
+REFACTOR:
+
+* `unpack` Moved `unpack` code into this module even though it's still WIP.
+* `Identifiable` has been moved into this module as it is shared
+* `GetOk` - removed deprecated usage
+
 ## 1.0.0 (June 14, 2022)
 
 REFACTOR:
