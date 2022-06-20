@@ -2,7 +2,10 @@ package test
 
 import (
 	"bytes"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"math/rand"
+	"strings"
+	"testing"
 	"text/template"
 	"time"
 )
@@ -27,4 +30,14 @@ func ExecuteTemplate(name, temp string, fields interface{}) string {
 	}
 
 	return tpl.String()
+}
+
+func GetEnvVarWithFallback(t *testing.T, envVars ...string) string {
+	envVarValue, err := schema.MultiEnvDefaultFunc(envVars, nil)()
+	if envVarValue == "" || envVarValue == nil || err != nil {
+		t.Fatalf("%s must be set for acceptance tests", strings.Join(envVars, " or "))
+		return ""
+	}
+
+	return envVarValue.(string)
 }
