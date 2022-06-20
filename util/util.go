@@ -1,12 +1,15 @@
 package util
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"math"
 	"reflect"
 	"regexp"
 	"sort"
 	"strings"
+	"text/template"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -110,6 +113,50 @@ func FormatCommaSeparatedString(thing interface{}) string {
 	return strings.Join(fields, ",")
 }
 
+func toHclFormat(thing interface{}) string {
+	switch thing.(type) {
+	case string:
+		return fmt.Sprintf(`"%s"`, thing.(string))
+	case []interface{}:
+		var result []string
+		for _, e := range thing.([]interface{}) {
+			result = append(result, toHclFormat(e))
+		}
+		return fmt.Sprintf("[%s]", strings.Join(result, ","))
+	case map[string]interface{}:
+		return fmt.Sprintf("\n\t%s\n\t\t\t\t", FmtMapToHcl(thing.(map[string]interface{})))
+	default:
+		return fmt.Sprintf("%v", thing)
+	}
+}
+
+func FmtMapToHcl(fields map[string]interface{}) string {
+	var allPairs []string
+	max := float64(0)
+	for key := range fields {
+		max = math.Max(max, float64(len(key)))
+	}
+	for key, value := range fields {
+		hcl := toHclFormat(value)
+		format := toHclFormatString(3, int(max), value)
+		allPairs = append(allPairs, fmt.Sprintf(format, key, hcl))
+	}
+
+	return strings.Join(allPairs, "\n")
+}
+
+func toHclFormatString(tabs, max int, value interface{}) string {
+	prefix := ""
+	suffix := ""
+	delimiter := "="
+	if reflect.TypeOf(value).Kind() == reflect.Map {
+		delimiter = ""
+		prefix = "{"
+		suffix = "}"
+	}
+	return fmt.Sprintf("%s%%-%ds %s %s%s%s", strings.Repeat("\t", tabs), max, delimiter, prefix, "%s", suffix)
+}
+
 // FieldToHcl this function is meant to use the HCL provided in the tag, or create a snake_case from the field name
 // it actually works as expected, but dynamically working with these names was catching edge cases everywhere and
 // it was/is a time sink to catch.
@@ -157,7 +204,23 @@ func SendUsage(ctx context.Context, client *resty.Client, productId string, feat
 		tflog.Info(ctx, fmt.Sprintf("failed to send usage: %v", err))
 	}
 }
+func ExecuteTemplate(name, temp string, fields interface{}) string {
+	var tpl bytes.Buffer
+	if err := template.Must(template.New(name).Parse(temp)).Execute(&tpl, fields); err != nil {
+		panic(err)
+	}
 
+	return tpl.String()
+}
+func MergeMaps(schemata ...map[string]interface{}) map[string]interface{} {
+	result := map[string]interface{}{}
+	for _, schma := range schemata {
+		for k, v := range schma {
+			result[k] = v
+		}
+	}
+	return result
+}
 func applyTelemetry(productId, resource, verb string, f func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
 	if f == nil {
 		panic("attempt to apply telemetry to a nil function")
