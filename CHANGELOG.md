@@ -1,3 +1,9 @@
+## 1.2.0 (June 14, 2022)
+
+REFACTOR:
+
+* revert changes to how field properties are fetched.
+
 ## 1.0.1 (June 14, 2022)
 
 REFACTOR:
