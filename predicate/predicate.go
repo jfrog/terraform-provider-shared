@@ -29,7 +29,7 @@ var True = func(hcl string) bool {
 	return true
 }
 var NoClass = Ignore("class", "rclass")
-var NoPassword = Ignore("password")
+var NoPassword = Ignore("class", "rclass", "password")
 
 func Ignore(names ...string) HclPredicate {
 	set := map[string]interface{}{}

@@ -29,28 +29,28 @@ func (d *ResourceData) GetString(key string, onlyIfChanged bool) string {
 func BoolPtr(v bool) *bool { return &v }
 
 func (d *ResourceData) GetBoolRef(key string, onlyIfChanged bool) *bool {
-	if v, ok := d.GetOk(key); ok && (!onlyIfChanged || d.HasChange(key)) {
+	if v, ok := d.GetOkExists(key); ok && (!onlyIfChanged || d.HasChange(key)) {
 		return BoolPtr(v.(bool))
 	}
 	return nil
 }
 
 func (d *ResourceData) GetBool(key string, onlyIfChanged bool) bool {
-	if v, ok := d.GetOk(key); ok && (!onlyIfChanged || d.HasChange(key)) {
+	if v, ok := d.GetOkExists(key); ok && (!onlyIfChanged || d.HasChange(key)) {
 		return v.(bool)
 	}
 	return false
 }
 
 func (d *ResourceData) GetInt(key string, onlyIfChanged bool) int {
-	if v, ok := d.GetOk(key); ok && (!onlyIfChanged || d.HasChange(key)) {
+	if v, ok := d.GetOkExists(key); ok && (!onlyIfChanged || d.HasChange(key)) {
 		return v.(int)
 	}
 	return 0
 }
 
 func (d *ResourceData) GetSet(key string) []string {
-	if v, ok := d.GetOk(key); ok {
+	if v, ok := d.GetOkExists(key); ok {
 		arr := CastToStringArr(v.(*schema.Set).List())
 		return arr
 	}
@@ -58,7 +58,7 @@ func (d *ResourceData) GetSet(key string) []string {
 }
 
 func (d *ResourceData) GetList(key string) []string {
-	if v, ok := d.GetOk(key); ok {
+	if v, ok := d.GetOkExists(key); ok {
 		arr := CastToStringArr(v.([]interface{}))
 		return arr
 	}
