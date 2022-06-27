@@ -83,8 +83,8 @@ func CastToInterfaceArr(arr []string) []interface{} {
 	return cpy
 }
 
-func MergeSchema(schemata ...map[string]*schema.Schema) map[string]*schema.Schema {
-	result := map[string]*schema.Schema{}
+func MergeMaps[K comparable, V any](schemata ...map[K]V) map[K]V {
+	result := map[K]V{}
 	for _, schma := range schemata {
 		for k, v := range schma {
 			result[k] = v
@@ -204,6 +204,7 @@ func SendUsage(ctx context.Context, client *resty.Client, productId string, feat
 		tflog.Info(ctx, fmt.Sprintf("failed to send usage: %v", err))
 	}
 }
+
 func ExecuteTemplate(name, temp string, fields interface{}) string {
 	var tpl bytes.Buffer
 	if err := template.Must(template.New(name).Parse(temp)).Execute(&tpl, fields); err != nil {
@@ -212,15 +213,7 @@ func ExecuteTemplate(name, temp string, fields interface{}) string {
 
 	return tpl.String()
 }
-func MergeMaps(schemata ...map[string]interface{}) map[string]interface{} {
-	result := map[string]interface{}{}
-	for _, schma := range schemata {
-		for k, v := range schma {
-			result[k] = v
-		}
-	}
-	return result
-}
+
 func applyTelemetry(productId, resource, verb string, f func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
 	if f == nil {
 		panic("attempt to apply telemetry to a nil function")
