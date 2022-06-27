@@ -1,3 +1,10 @@
+## 1.3.0 (June 14, 2022)
+
+REFACTOR:
+
+* MergeSchema is now MergeMap and has been genericized
+* 1 more util function added
+
 ## 1.2.0 (June 14, 2022)
 
 REFACTOR:
