@@ -1,3 +1,9 @@
+## 1.4.0 (July 1, 2022)
+
+REFACTOR:
+
+* Fix client user agent string was hardcoded to Artifactory
+
 ## 1.3.0 (June 14, 2022)
 
 REFACTOR:
@@ -23,7 +29,7 @@ REFACTOR:
 
 REFACTOR:
 
-* `util` package stripped down. Predicates moved to `predicate` packages and packers to `packer` package. 
+* `util` package stripped down. Predicates moved to `predicate` packages and packers to `packer` package.
 * Some remainder of sharable code from artifactory code was moved in.
 * `NoPassword` predicate now no longer also includes `NoClass` - done for distinction and clarity
 

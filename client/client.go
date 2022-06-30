@@ -10,7 +10,7 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-func Build(URL, version string) (*resty.Client, error) {
+func Build(URL, productId string) (*resty.Client, error) {
 	u, err := url.ParseRequestURI(URL)
 
 	if err != nil {
@@ -41,7 +41,7 @@ func Build(URL, version string) (*resty.Client, error) {
 		}).
 		SetHeader("content-type", "application/json").
 		SetHeader("accept", "*/*").
-		SetHeader("user-agent", "jfrog/terraform-provider-artifactory:"+version).
+		SetHeader("user-agent", "jfrog/"+productId).
 		SetRetryCount(20)
 
 	restyBase.DisableWarn = true
