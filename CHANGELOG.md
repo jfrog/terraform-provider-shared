@@ -1,3 +1,9 @@
+## 1.5.0 (July 27, 2022)
+
+BUG FIXES:
+
+* Update string size limit for `ProjectKey` validator
+
 ## 1.4.0 (July 1, 2022)
 
 REFACTOR:
