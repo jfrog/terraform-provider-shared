@@ -51,7 +51,7 @@ var CommaSeperatedList = validation.ToDiagFunc(
 )
 
 var ProjectKey = validation.ToDiagFunc(
-	validation.StringMatch(regexp.MustCompile(`^[a-z0-9]{3,10}$`), "project_key must be 3 - 10 lowercase alphanumeric characters"),
+	validation.StringMatch(regexp.MustCompile(`^[a-z0-9]{3,25}$`), "project_key must be 3 - 25 lowercase alphanumeric characters"),
 )
 
 var validLicenseTypes = []string{
