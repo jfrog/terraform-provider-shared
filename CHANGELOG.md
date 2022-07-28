@@ -1,3 +1,9 @@
+## 1.6.0 (July 28, 2022)
+
+BUG FIXES:
+
+* Revert changes to size limit for `ProjectKey` validator
+
 ## 1.5.0 (July 27, 2022)
 
 BUG FIXES:
