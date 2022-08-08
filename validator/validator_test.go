@@ -27,6 +27,9 @@ func TestProjectKey_invalidKeys(t *testing.T) {
 		"ab", // 2 characters, too short
 		"abcdefghijk", // 11 characters, too long
 		"abc,", // invalid characters
+		"-abcde1234", // can't start with hyphen
+		"ABC123", // lower case only
+		"123abc", // must begin with alpha
 	}
 
 	for _, projectKey := range invalidProjectKeys {
