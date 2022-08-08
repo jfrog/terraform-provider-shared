@@ -18,4 +18,4 @@ fmtcheck:
 	@echo "==> Checking that code complies with gofmt requirements..."
 	@sh -c "find . -name '*.go' -not -name '*vendor*' -print0 | xargs -0 gofmt -l -s"
 
-.PHONY: build fmt
+.PHONY: build fmt test

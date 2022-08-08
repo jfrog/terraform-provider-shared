@@ -3,15 +3,16 @@ package test
 import (
 	"bytes"
 	"fmt"
-	"github.com/go-resty/resty/v2"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"math/rand"
 	"reflect"
 	"strings"
 	"testing"
 	"text/template"
 	"time"
+
+	"github.com/go-resty/resty/v2"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func RandomInt() int {

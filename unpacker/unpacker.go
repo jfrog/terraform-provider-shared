@@ -1,8 +1,9 @@
 package unpacker
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"reflect"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 // UnpackFunc must return a pointer to a struct and the resource id
@@ -40,5 +41,5 @@ func Universal(payload reflect.Type, s *schema.ResourceData) (interface{}, strin
 	//	Unavailable: d.GetBool("unavailable", false),
 	//}
 	//return &result, result.PairName, nil
-	return nil,"", nil
+	return nil, "", nil
 }
