@@ -1,3 +1,9 @@
+## 1.7.0 (August 9, 2022)
+
+BUG FIXES:
+
+* Update regex for `ProjectKey` validator
+
 ## 1.6.0 (July 28, 2022)
 
 BUG FIXES:
