@@ -10,6 +10,7 @@ func TestProjectKey(t *testing.T) {
 		"abc", // min 3
 		"abcde12345", // max 10
 		"abc-123", // hyphen is supported but not documented
+		"abc123-", // hyphen can be anywhere
 	}
 
 	for _, projectKey := range validProjectKeys {
