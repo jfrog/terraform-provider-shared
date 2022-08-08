@@ -36,7 +36,7 @@ func TestProjectKey_invalidKeys(t *testing.T) {
 				t.Errorf("ProjectKey '%s' should fail", projectKey)
 			}
 
-			errorRegex := regexp.MustCompile(`.*project_key must be 3 - 10 lowercase alphanumeric characters.*`)
+			errorRegex := regexp.MustCompile(`.*project_key must be 3 - 10 lowercase alphanumeric and hyphen characters.*`)
 			if !errorRegex.MatchString(diag[0].Summary) {
 				t.Fail()
 			}
