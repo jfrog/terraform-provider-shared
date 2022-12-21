@@ -7,7 +7,7 @@ import (
 
 func TestProjectKey(t *testing.T) {
 	validProjectKeys := []string{
-		"abc", // min 3
+		"ab", // min 2
 		"abcde12345", // max 10
 		"abc-123", // hyphen is supported but not documented
 		"abc123-", // hyphen can be anywhere
@@ -25,7 +25,7 @@ func TestProjectKey(t *testing.T) {
 
 func TestProjectKey_invalidKeys(t *testing.T) {
 	invalidProjectKeys := []string{
-		"ab", // 2 characters, too short
+		"a", // 1 character, too short
 		"abcdefghijk", // 11 characters, too long
 		"abc,", // invalid characters
 		"-abcde1234", // can't start with hyphen
@@ -40,7 +40,7 @@ func TestProjectKey_invalidKeys(t *testing.T) {
 				t.Errorf("ProjectKey '%s' should fail", projectKey)
 			}
 
-			errorRegex := regexp.MustCompile(`.*project_key must be 3 - 10 lowercase alphanumeric and hyphen characters.*`)
+			errorRegex := regexp.MustCompile(`.*project_key must be 2 - 10 lowercase alphanumeric and hyphen characters.*`)
 			if !errorRegex.MatchString(diag[0].Summary) {
 				t.Fail()
 			}
