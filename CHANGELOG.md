@@ -2,7 +2,7 @@
 
 NEW FEATURES:
 
-* added validation for the cron expression length to only allow 6-7 characters expressions. PR [#25](https://github.com/jfrog/terraform-provider-shared/pull/25)
+* added validation for the cron expression length to only allow 6-7 parts expressions. PR [#25](https://github.com/jfrog/terraform-provider-shared/pull/25)
 
 ## 1.8.0 (December 21, 2022)
 
