@@ -1,3 +1,9 @@
+## 1.9.0 (January 6, 2023)
+
+NEW FEATURES:
+
+* added validation for the cron expression length to only allow 6-7 characters expressions. PR [#25](https://github.com/jfrog/terraform-provider-shared/pull/25)
+
 ## 1.8.0 (December 21, 2022)
 
 BUG FIXES:
