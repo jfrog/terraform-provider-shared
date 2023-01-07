@@ -46,6 +46,21 @@ func Cron(value interface{}, _ cty.Path) diag.Diagnostics {
 	return diags
 }
 
+func CronLength(value interface{}, _ cty.Path) diag.Diagnostics {
+	var diags diag.Diagnostics
+	cron := regexp.MustCompile("[^\\s]+").FindAllString(value.(string), -1)
+
+	if len(cron) > 7 || len(cron) < 6 {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Invalid Cron expression, value should be between 6 and 7 characters long",
+			Detail:   fmt.Sprintf("%s is not a valid cron", value),
+		})
+	}
+
+	return diags
+}
+
 var CommaSeperatedList = validation.ToDiagFunc(
 	validation.StringMatch(regexp.MustCompile(`.+(?:,.+)*`), "must be comma separated string"),
 )
