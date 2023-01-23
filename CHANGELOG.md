@@ -1,3 +1,9 @@
+## 1.10.0 (January 23, 2023)
+
+NEW FEATURES:
+
+* added `CheckImportState` function to verify the import state in import tests. PR [#26](https://github.com/jfrog/terraform-provider-shared/pull/26)
+
 ## 1.9.0 (January 6, 2023)
 
 NEW FEATURES:
