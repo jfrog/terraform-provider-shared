@@ -692,7 +692,7 @@ func LdapFilter(value interface{}, _ cty.Path) diag.Diagnostics {
 
 // CheckImportState is used in ImportStateCheck if ImportState is set to `true`.
 // IdAttribute is the field used in d.SetId() in Create function to set a resource ID.
-func CheckImportState(resourceId string, IdAttribute string) func(states []*terraform.InstanceState) error {
+func CheckImportState(resourceId string, idAttribute string) func(states []*terraform.InstanceState) error {
 	return func(states []*terraform.InstanceState) error {
 		if len(states) == 0 {
 			return fmt.Errorf("no import state")
@@ -701,8 +701,8 @@ func CheckImportState(resourceId string, IdAttribute string) func(states []*terr
 		if instanceState.ID != resourceId {
 			return fmt.Errorf("incorrect state ID: %s", instanceState.ID)
 		}
-		if instanceState.Attributes["name"] != resourceId {
-			return fmt.Errorf("incorrect state attribute '%s': %s", IdAttribute, instanceState.Attributes[IdAttribute])
+		if instanceState.Attributes[idAttribute] != resourceId {
+			return fmt.Errorf("incorrect state attribute '%s': %s", idAttribute, instanceState.Attributes[idAttribute])
 		}
 		return nil
 	}
