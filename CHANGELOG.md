@@ -1,4 +1,10 @@
-## 1.10.0 (January 23, 2023)
+## 1.11.0 (February 24, 2022)
+
+BUG FIXES:
+
+* Update regex for `ProjectKey` validator to allow 2-20 characters since 7.49.3. PR [#28](https://github.com/jfrog/terraform-provider-shared/pull/28)
+
+# 1.10.0 (January 23, 2023)
 
 NEW FEATURES:
 
