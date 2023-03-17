@@ -7,7 +7,7 @@ build: fmtcheck
 
 test:
 	@echo "==> Starting unit tests"
-	go test $(TEST) -timeout=30s -parallel=4
+	go test $(TEST) -timeout=30s -parallel=4 -count=1
 
 fmt:
 	@echo "==> Fixing source code with gofmt..."

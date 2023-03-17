@@ -68,7 +68,9 @@ func (d *ResourceData) GetList(key string) []string {
 func CastToStringArr(arr []interface{}) []string {
 	cpy := make([]string, 0, len(arr))
 	for _, r := range arr {
-		cpy = append(cpy, r.(string))
+		if r != nil {
+			cpy = append(cpy, r.(string))
+		}
 	}
 
 	return cpy

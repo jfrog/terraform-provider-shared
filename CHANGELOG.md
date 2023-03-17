@@ -1,3 +1,9 @@
+## 1.11.1 (March 20, 2022)
+
+BUG FIXES:
+
+* Add nil checking for `CastToStringArr` to avoid panic. PR [#29](https://github.com/jfrog/terraform-provider-shared/pull/29)
+
 ## 1.11.0 (February 24, 2022)
 
 BUG FIXES:
