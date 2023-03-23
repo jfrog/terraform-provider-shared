@@ -18,6 +18,6 @@ gcloud container clusters create "${GKE_CLUSTER}" --zone "${GKE_ZONE}" \
       --disk-size 50Gi \
       --min-nodes 1 --max-nodes 5 --project "${GKE_PROJECT}" \
       --enable-master-authorized-networks \
-      --master-authorized-networks 52.215.237.185/32,52.9.243.19/32,"${WHITELIST_CIDR}"
+      --master-authorized-networks "${ZSCALER_CIDR1}","${ZSCALER_CIDR2}","${WHITELIST_CIDR}"
       # add your NAT CIDR to whitelist local or CI/CD NAT IP. Set WHITELIST_CIDR in CI/CD to add CIDR to the list automatically.
 gcloud container clusters get-credentials "${GKE_CLUSTER}" --zone "${GKE_ZONE}" --project "${GKE_PROJECT}"
