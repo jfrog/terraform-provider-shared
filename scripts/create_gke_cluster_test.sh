@@ -5,13 +5,12 @@ echo "--------------------------------------------------------------------"
 echo "###                 Create GKE k8s cluster                        ###"
 echo "--------------------------------------------------------------------"
 
-printenv
-
 if [ -n "${SERVICE_ACCOUNT_JSON}" ]; then
   echo "Authenticating with service account JSON file"
   gcloud auth activate-service-account --key-file="${SERVICE_ACCOUNT_JSON}"
 fi
 
+echo "Creating k8s cluster using default authentication"
 gcloud container clusters create "${GKE_CLUSTER}" --zone "${GKE_ZONE}" \
       --node-locations "${GKE_ZONE}" --num-nodes "${NUM_NODES:-5}" --enable-autoscaling \
       --machine-type "${MACHINE_TYPE}" \
