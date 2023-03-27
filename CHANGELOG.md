@@ -1,3 +1,13 @@
+## 1.12.0 (March 27, 2022)
+
+NEW FEATURES:
+
+* Added `ProviderMetadata` struct to support passing more enriched metadata from Terraform Provider to resources.
+* Added `CheckVersion` function to verify if a version is same or later than the supported version.
+
+Issue [#705](https://github.com/jfrog/terraform-provider-artifactory/issues/705)
+PR [#30](https://github.com/jfrog/terraform-provider-shared/pull/30)
+
 ## 1.11.1 (March 20, 2022)
 
 BUG FIXES:

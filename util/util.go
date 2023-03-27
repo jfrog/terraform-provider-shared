@@ -12,10 +12,16 @@ import (
 	"text/template"
 
 	"github.com/go-resty/resty/v2"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
+
+type ProvderMetadata struct {
+	Client             *resty.Client
+	ArtifactoryVersion string
+}
 
 type ResourceData struct{ *schema.ResourceData }
 
@@ -223,7 +229,7 @@ func applyTelemetry(productId, resource, verb string, f func(context.Context, *s
 	return func(ctx context.Context, data *schema.ResourceData, meta interface{}) diag.Diagnostics {
 		// best effort. Go routine it
 		featureUsage := fmt.Sprintf("Resource/%s/%s", resource, verb)
-		go SendUsage(ctx, meta.(*resty.Client), productId, featureUsage)
+		go SendUsage(ctx, meta.(ProvderMetadata).Client, productId, featureUsage)
 		return f(ctx, data, meta)
 	}
 }
@@ -302,4 +308,18 @@ func CheckArtifactoryLicense(client *resty.Client, licenseTypesToCheck ...string
 
 type Identifiable interface {
 	Id() string
+}
+
+func CheckVersion(versionToCheck string, supportedVersion string) (bool, error) {
+	v1, err := version.NewVersion(versionToCheck)
+	if err != nil {
+		return false, fmt.Errorf("could not parse version: %s", versionToCheck)
+	}
+
+	v2, err := version.NewVersion(supportedVersion)
+	if err != nil {
+		return false, fmt.Errorf("could not parse version: %s", supportedVersion)
+	}
+
+	return v1.GreaterThanOrEqual(v2), nil
 }
