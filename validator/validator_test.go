@@ -25,12 +25,12 @@ func TestProjectKey(t *testing.T) {
 
 func TestProjectKey_invalidKeys(t *testing.T) {
 	invalidProjectKeys := []string{
-		"a", // 1 character, too short
-		"abcdefghijklmnopqrstu12345678901234567890", // 21 characters, too long
-		"abc,",       // invalid characters
-		"-abcde1234", // can't start with hyphen
-		"ABC123",     // lower case only
-		"123abc",     // must begin with alpha
+		"a",                                 // 1 character, too short
+		"abcdefghijklmnopqrstu123456789012", // 33 characters, too long
+		"abc,",                              // invalid characters
+		"-abcde1234",                        // can't start with hyphen
+		"ABC123",                            // lower case only
+		"123abc",                            // must begin with alpha
 	}
 
 	for _, projectKey := range invalidProjectKeys {
