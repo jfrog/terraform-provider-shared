@@ -1,4 +1,12 @@
-## 1.12.0 (March 27, 2022)
+## 1.13.0 (March 28, 2023)
+
+NEW FEATURES:
+
+* Increase the allowed project key length to 32 characters, since Artifactory 7.56.2 expands the maximum length for project key to 32.
+
+PR [#31](https://github.com/jfrog/terraform-provider-shared/pull/31)
+
+## 1.12.0 (March 27, 2023)
 
 NEW FEATURES:
 
@@ -8,13 +16,13 @@ NEW FEATURES:
 Issue [#705](https://github.com/jfrog/terraform-provider-artifactory/issues/705)
 PR [#30](https://github.com/jfrog/terraform-provider-shared/pull/30)
 
-## 1.11.1 (March 20, 2022)
+## 1.11.1 (March 20, 2023)
 
 BUG FIXES:
 
 * Add nil checking for `CastToStringArr` to avoid panic. PR [#29](https://github.com/jfrog/terraform-provider-shared/pull/29)
 
-## 1.11.0 (February 24, 2022)
+## 1.11.0 (February 24, 2023)
 
 BUG FIXES:
 
