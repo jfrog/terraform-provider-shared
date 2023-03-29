@@ -323,3 +323,20 @@ func CheckVersion(versionToCheck string, supportedVersion string) (bool, error) 
 
 	return v1.GreaterThanOrEqual(v2), nil
 }
+
+func GetArtifactoryVersion(client *resty.Client) (string, error) {
+	type ArtifactoryVersion struct {
+		Version string `json:"version"`
+	}
+
+	artifactoryVersion := ArtifactoryVersion{}
+	_, err := client.R().
+		SetResult(&artifactoryVersion).
+		Get("/artifactory/api/system/version")
+
+	if err != nil {
+		return "", fmt.Errorf("Failed to get Artifactory version. %s", err)
+	}
+
+	return artifactoryVersion.Version, nil
+}
