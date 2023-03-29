@@ -1,3 +1,11 @@
+## 1.14.0 (March 29, 2023)
+
+NEW FEATURES:
+
+* Added `CheckArtifactoryVersion` function to get instance version from Artifactory.
+
+PR [#32](https://github.com/jfrog/terraform-provider-shared/pull/32)
+
 ## 1.13.0 (March 28, 2023)
 
 NEW FEATURES:
