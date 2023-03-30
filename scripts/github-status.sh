@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -eo pipefail
 
 TOKEN=${1}
 REPO_PATH=${2}
