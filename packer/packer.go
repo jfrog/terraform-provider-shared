@@ -3,7 +3,7 @@ package packer
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/jfrog/terraform-provider-shared/predicate"
-	"github.com/jfrog/terraform-provider-shared/util"
+	util_sdk "github.com/jfrog/terraform-provider-shared/util/sdk"
 
 	"fmt"
 	"reflect"
@@ -16,7 +16,7 @@ type PackFunc func(repo interface{}, d *schema.ResourceData) error
 func Universal(predicate predicate.HclPredicate) PackFunc {
 
 	return func(payload interface{}, d *schema.ResourceData) error {
-		setValue := util.MkLens(d)
+		setValue := util_sdk.MkLens(d)
 
 		var errors []error
 
@@ -78,7 +78,7 @@ func findInspector(kind reflect.Kind) AutoMapper {
 					result = []interface{}{lookup(deref.Interface(), nil)}
 				}
 				return map[string]interface{}{
-					util.FieldToHcl(field): result,
+					util_sdk.FieldToHcl(field): result,
 				}
 			}
 			return map[string]interface{}{}
@@ -86,13 +86,13 @@ func findInspector(kind reflect.Kind) AutoMapper {
 	case reflect.Slice:
 		return func(field reflect.StructField, thing reflect.Value) map[string]interface{} {
 			return map[string]interface{}{
-				util.FieldToHcl(field): util.CastToInterfaceArr(thing.Interface().([]string)),
+				util_sdk.FieldToHcl(field): util_sdk.CastToInterfaceArr(thing.Interface().([]string)),
 			}
 		}
 	}
 	return func(field reflect.StructField, thing reflect.Value) map[string]interface{} {
 		return map[string]interface{}{
-			util.FieldToHcl(field): thing.Interface(),
+			util_sdk.FieldToHcl(field): thing.Interface(),
 		}
 	}
 }
@@ -116,7 +116,7 @@ func lookup(payload interface{}, pred predicate.HclPredicate) map[string]interfa
 
 		shouldLookup := true
 		if thing.Kind() != reflect.Struct {
-			hcl := util.FieldToHcl(field)
+			hcl := util_sdk.FieldToHcl(field)
 			shouldLookup = pred(hcl)
 		}
 

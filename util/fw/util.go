@@ -1,4 +1,4 @@
-package utilfw
+package fw
 
 import (
 	"fmt"
@@ -11,11 +11,11 @@ import (
 func ValueToSetType(v attr.Value) types.Set {
 	if vb, ok := v.(types.Set); ok {
 		return vb
-	} else if vb, ok := v.(*types.Set); ok {
-		return *vb
-	} else {
-		panic(fmt.Sprintf("cannot pass type %T to conv.ValueToSetType", v))
 	}
+	if vb, ok := v.(*types.Set); ok {
+		return *vb
+	}
+	panic(fmt.Sprintf("cannot pass type %T to conv.ValueToSetType", v))
 }
 
 // AttributeValueToString will attempt to execute the appropriate AttributeStringerFunc from the ones registered.
