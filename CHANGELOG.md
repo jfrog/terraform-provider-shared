@@ -1,3 +1,11 @@
+## 1.15.0 (May 2, 2023)
+
+NEW FEATURES: 
+
+* Added `utilfw.go` file with functions used in the resources, migrated to Terraform Plugin Framework. Moved from SDK to Plugin package.
+
+PR [#33](https://github.com/jfrog/terraform-provider-shared/pull/33)
+
 ## 1.14.0 (March 29, 2023)
 
 NEW FEATURES:

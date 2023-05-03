@@ -1,4 +1,4 @@
-package test
+package testutil
 
 import (
 	"bytes"
@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func RandomInt() int {
