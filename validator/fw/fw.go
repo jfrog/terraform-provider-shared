@@ -104,7 +104,7 @@ func (v booleanValidator) ValidateBool(ctx context.Context, req validator.BoolRe
 	}
 }
 
-// BoolConflict checks that any Int64 values in the paths described by the
+// BoolConflict checks that any Bool values in the paths described by the
 // path.Expression are less than the current attribute value.
 func BoolConflict(conflictingBools bool, expressions ...path.Expression) validator.Bool {
 	return &booleanValidator{
