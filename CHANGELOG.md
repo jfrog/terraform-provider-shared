@@ -1,3 +1,9 @@
+## 1.16.0 (May 2, 2023)
+
+NEW FEATURES:
+
+* added validator to check if two boolean attributes are set to the same value in Plugin Framework resources.
+
 ## 1.15.0 (May 2, 2023)
 
 NEW FEATURES: 
