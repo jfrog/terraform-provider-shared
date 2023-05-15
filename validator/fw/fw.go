@@ -93,7 +93,7 @@ func (v booleanValidator) ValidateBool(ctx context.Context, req validator.BoolRe
 				continue
 			}
 
-			if matchedPathConfig.ValueBool() == req.ConfigValue.ValueBool() {
+			if matchedPathConfig.ValueBool() == v.conflictingBools && req.ConfigValue.ValueBool() == v.conflictingBools {
 				resp.Diagnostics.AddAttributeError(
 					matchedPath,
 					"Invalid Attribute Value",

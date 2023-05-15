@@ -1,3 +1,9 @@
+## 1.16.1 (May 15, 2023)
+
+BUG FIXES:
+
+* fixed verification for fw.ValidateBool, values are not compared against each other, but against the value, passed in the function caller.
+
 ## 1.16.0 (May 2, 2023)
 
 NEW FEATURES:
