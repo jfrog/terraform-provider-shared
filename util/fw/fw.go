@@ -53,3 +53,21 @@ func UnableToUpdateResourceError(resp *resource.UpdateResponse, err string) {
 			"Error: "+err,
 	)
 }
+
+func UnableToRefreshResourceError(resp *resource.ReadResponse, err string) {
+	resp.Diagnostics.AddError(
+		"Unable to Refresh Resource",
+		"An unexpected error occurred while attempting to refresh resource state. "+
+			"Please retry the operation or report this issue to the provider developers.\n\n"+
+			"Error: "+err,
+	)
+}
+
+func UnableToDeleteResourceError(resp *resource.DeleteResponse, err string) {
+	resp.Diagnostics.AddError(
+		"Unable to Delete Resource",
+		"An unexpected error occurred while attempting to delete the resource. "+
+			"Please retry the operation or report this issue to the provider developers.\n\n"+
+			"Error: "+err,
+	)
+}
