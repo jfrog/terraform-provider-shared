@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -33,4 +34,40 @@ func StringSetToStrings(v attr.Value) []string {
 		out[i] = AttributeValueToString(ve)
 	}
 	return out
+}
+
+func UnableToCreateResourceError(resp *resource.CreateResponse, err string) {
+	resp.Diagnostics.AddError(
+		"Unable to Create Resource",
+		"An unexpected error occurred while creating the resource update request. "+
+			"Please report this issue to the provider developers.\n\n"+
+			"Error: "+err,
+	)
+}
+
+func UnableToUpdateResourceError(resp *resource.UpdateResponse, err string) {
+	resp.Diagnostics.AddError(
+		"Unable to Update Resource",
+		"An unexpected error occurred while updating the resource update request. "+
+			"Please report this issue to the provider developers.\n\n"+
+			"Error: "+err,
+	)
+}
+
+func UnableToRefreshResourceError(resp *resource.ReadResponse, err string) {
+	resp.Diagnostics.AddError(
+		"Unable to Refresh Resource",
+		"An unexpected error occurred while attempting to refresh resource state. "+
+			"Please retry the operation or report this issue to the provider developers.\n\n"+
+			"Error: "+err,
+	)
+}
+
+func UnableToDeleteResourceError(resp *resource.DeleteResponse, err string) {
+	resp.Diagnostics.AddError(
+		"Unable to Delete Resource",
+		"An unexpected error occurred while attempting to delete the resource. "+
+			"Please retry the operation or report this issue to the provider developers.\n\n"+
+			"Error: "+err,
+	)
 }
