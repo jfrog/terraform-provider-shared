@@ -1,3 +1,10 @@
+## 1.17.0 (May 30, 2023)
+
+NEW FEATURES:
+
+* added new set validator to check if string is in a pre-defined list of strings.
+* added new object validator to check if an attribute is set with value (not unknown or null) when the object is set.
+
 ## 1.16.1 (May 15, 2023)
 
 BUG FIXES:
