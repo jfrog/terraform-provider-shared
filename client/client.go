@@ -20,7 +20,7 @@ func Build(URL, productId string) (*resty.Client, error) {
 	baseUrl := fmt.Sprintf("%s://%s", u.Scheme, u.Host)
 
 	restyBase := resty.New().
-		SetHostURL(baseUrl).
+		SetBaseURL(baseUrl).
 		OnAfterResponse(func(client *resty.Client, response *resty.Response) error {
 			if response == nil {
 				return fmt.Errorf("no response found")

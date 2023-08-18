@@ -46,6 +46,7 @@ func GetEnvVarWithFallback(t *testing.T, envVars ...string) string {
 
 	return envVarValue.(string)
 }
+
 func MapToTestChecks(fqrn string, fields map[string]interface{}) []resource.TestCheckFunc {
 	var result []resource.TestCheckFunc
 	for key, value := range fields {
