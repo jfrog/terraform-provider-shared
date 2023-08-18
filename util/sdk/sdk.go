@@ -21,6 +21,7 @@ import (
 type ProvderMetadata struct {
 	Client             *resty.Client
 	ArtifactoryVersion string
+	XrayVersion        string
 }
 
 type ResourceData struct{ *schema.ResourceData }
@@ -335,8 +336,25 @@ func GetArtifactoryVersion(client *resty.Client) (string, error) {
 		Get("/artifactory/api/system/version")
 
 	if err != nil {
-		return "", fmt.Errorf("Failed to get Artifactory version. %s", err)
+		return "", fmt.Errorf("failed to get Artifactory version. %s", err)
 	}
 
 	return artifactoryVersion.Version, nil
+}
+
+func GetXrayVersion(client *resty.Client) (string, error) {
+	type XrayVersion struct {
+		Version string `json:"xray_version"`
+	}
+
+	xrayVersion := XrayVersion{}
+	_, err := client.R().
+		SetResult(&xrayVersion).
+		Get("/xray/api/v1/system/version")
+
+	if err != nil {
+		return "", fmt.Errorf("failed to get Xray version. %s", err)
+	}
+
+	return xrayVersion.Version, nil
 }
