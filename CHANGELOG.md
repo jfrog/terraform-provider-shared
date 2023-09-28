@@ -1,10 +1,18 @@
-## 1.18.0 (Sep 28, 2023)
+## 1.9.0 (Sep 28, 2023)
 
 NEW FEATURES:
 
 * added new string validator to check if string is valid cron expression.
 
 PR [#40](https://github.com/jfrog/terraform-provider-shared/pull/40)
+
+## 1.8.0 (Aug 18, 2023)
+
+NEW FEATURES:
+
+* added `CheckXrayVersion` function to get instance version from Xray.
+
+PR [#39](https://github.com/jfrog/terraform-provider-shared/pull/39)
 
 ## 1.17.0 (May 30, 2023)
 
