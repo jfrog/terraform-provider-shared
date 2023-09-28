@@ -1,3 +1,11 @@
+## 1.18.0 (Sep 28, 2023)
+
+NEW FEATURES:
+
+* added new string validator to check if string is valid cron expression.
+
+PR [#40](https://github.com/jfrog/terraform-provider-shared/pull/40)
+
 ## 1.17.0 (May 30, 2023)
 
 NEW FEATURES:
