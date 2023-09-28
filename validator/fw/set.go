@@ -10,7 +10,7 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-// Ensure our implementation satisfies the validator.Bool interface.
+// Ensure our implementation satisfies the validator.Set interface.
 var _ validator.Set = &stringInSliceValidator{}
 
 type stringInSliceValidator struct {
