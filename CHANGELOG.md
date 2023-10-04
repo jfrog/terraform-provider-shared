@@ -1,3 +1,13 @@
+## 1.10.0 (Oct 4, 2023)
+
+NEW FEATURES:
+
+* added new string validator to check if string is valid URL.
+* re-organize framework string validator files.
+* added unit tests for framework string validators.
+
+PR [#41](https://github.com/jfrog/terraform-provider-shared/pull/41)
+
 ## 1.9.0 (Sep 28, 2023)
 
 NEW FEATURES:
