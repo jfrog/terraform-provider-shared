@@ -6,6 +6,8 @@ import (
 )
 
 func TestProjectKey(t *testing.T) {
+	t.Parallel()
+
 	validProjectKeys := []string{
 		"ab",                               // min 2
 		"abcde123456789012345678901234567", // max 32
@@ -14,7 +16,10 @@ func TestProjectKey(t *testing.T) {
 	}
 
 	for _, projectKey := range validProjectKeys {
+		projectKey := projectKey
 		t.Run(projectKey, func(t *testing.T) {
+			t.Parallel()
+
 			diag := ProjectKey(projectKey, nil)
 			if diag.HasError() {
 				t.Errorf("ProjectKey validation failed. diag: %v", diag)
@@ -24,6 +29,8 @@ func TestProjectKey(t *testing.T) {
 }
 
 func TestProjectKey_invalidKeys(t *testing.T) {
+	t.Parallel()
+
 	invalidProjectKeys := []string{
 		"a",                                 // 1 character, too short
 		"abcdefghijklmnopqrstu123456789012", // 33 characters, too long
@@ -34,7 +41,10 @@ func TestProjectKey_invalidKeys(t *testing.T) {
 	}
 
 	for _, projectKey := range invalidProjectKeys {
+		projectKey := projectKey
 		t.Run(projectKey, func(t *testing.T) {
+			t.Parallel()
+
 			diag := ProjectKey(projectKey, nil)
 			if !diag.HasError() {
 				t.Errorf("ProjectKey '%s' should fail", projectKey)
