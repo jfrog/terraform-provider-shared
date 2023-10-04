@@ -1,4 +1,4 @@
-## 1.10.0 (Oct 4, 2023)
+## 1.20.0 (Oct 4, 2023)
 
 NEW FEATURES:
 
@@ -8,7 +8,7 @@ NEW FEATURES:
 
 PR [#41](https://github.com/jfrog/terraform-provider-shared/pull/41)
 
-## 1.9.0 (Sep 28, 2023)
+## 1.19.0 (Sep 28, 2023)
 
 NEW FEATURES:
 
@@ -16,7 +16,7 @@ NEW FEATURES:
 
 PR [#40](https://github.com/jfrog/terraform-provider-shared/pull/40)
 
-## 1.8.0 (Aug 18, 2023)
+## 1.18.0 (Aug 18, 2023)
 
 NEW FEATURES:
 
