@@ -1,4 +1,4 @@
-package fw
+package string
 
 import (
 	"context"
@@ -11,15 +11,14 @@ import (
 // Ensure our implementation satisfies the validator.String interface.
 var _ validator.String = &cronValidator{}
 
-type cronValidator struct {
+type cronValidator struct{}
+
+func (v cronValidator) Description(_ context.Context) string {
+	return "value must be a valid cron expression"
 }
 
-func (validator cronValidator) Description(_ context.Context) string {
-	return "value must match be a valid cron expression"
-}
-
-func (validator cronValidator) MarkdownDescription(ctx context.Context) string {
-	return validator.Description(ctx)
+func (v cronValidator) MarkdownDescription(ctx context.Context) string {
+	return v.Description(ctx)
 }
 
 func (v cronValidator) ValidateString(ctx context.Context, request validator.StringRequest, response *validator.StringResponse) {
