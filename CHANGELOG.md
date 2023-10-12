@@ -1,3 +1,11 @@
+## 1.20.1 (Oct 12, 2023)
+
+BUG FIXES:
+
+* Bump golang.org/x/net from 0.8.0 to 0.17.0
+
+PR [42](https://github.com/jfrog/terraform-provider-shared/pull/42)
+
 ## 1.20.0 (Oct 4, 2023)
 
 NEW FEATURES:
