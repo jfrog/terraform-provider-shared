@@ -1,3 +1,11 @@
+## 1.20.2 (Oct 30, 2023)
+
+BUG FIXES:
+
+* Bump google.golang.org/grpc from 1.53.0 to 1.56.3
+
+PR [43](https://github.com/jfrog/terraform-provider-shared/pull/43)
+
 ## 1.20.1 (Oct 12, 2023)
 
 BUG FIXES:
