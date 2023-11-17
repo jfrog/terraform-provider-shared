@@ -3,6 +3,7 @@ package util
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/hashicorp/go-version"
@@ -89,4 +90,13 @@ func GetXrayVersion(client *resty.Client) (string, error) {
 	}
 
 	return xrayVersion.Version, nil
+}
+
+func CheckEnvVars(vars []string, dv string) string {
+	for _, k := range vars {
+		if v := os.Getenv(k); v != "" {
+			return v
+		}
+	}
+	return dv
 }
