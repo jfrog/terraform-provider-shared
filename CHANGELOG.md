@@ -1,3 +1,11 @@
+## 1.20.3 (Nov 20, 2023)
+
+IMPROVEMENTS:
+
+* Move utility functions that are not specific to SDKv2 or Framework to `util.go` so they can be used without pulling in either library.
+
+PR [44](https://github.com/jfrog/terraform-provider-shared/pull/44)
+
 ## 1.20.2 (Oct 30, 2023)
 
 BUG FIXES:
