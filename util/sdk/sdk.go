@@ -12,17 +12,10 @@ import (
 	"text/template"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/hashicorp/go-version"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/jfrog/terraform-provider-shared/util"
 )
-
-type ProvderMetadata struct {
-	Client             *resty.Client
-	ArtifactoryVersion string
-	XrayVersion        string
-}
 
 type ResourceData struct{ *schema.ResourceData }
 
@@ -186,34 +179,6 @@ func FieldToHcl(field reflect.StructField) string {
 	return result
 }
 
-func SendUsage(ctx context.Context, client *resty.Client, productId string, featureUsages ...string) {
-	type Feature struct {
-		FeatureId string `json:"featureId"`
-	}
-	type UsageStruct struct {
-		ProductId string    `json:"productId"`
-		Features  []Feature `json:"features"`
-	}
-
-	features := []Feature{
-		{FeatureId: "Partner/ACC-007450"},
-	}
-
-	for _, featureUsage := range featureUsages {
-		features = append(features, Feature{FeatureId: featureUsage})
-	}
-
-	usage := UsageStruct{productId, features}
-
-	_, err := client.R().
-		SetBody(usage).
-		Post("artifactory/api/system/usage")
-
-	if err != nil {
-		tflog.Info(ctx, fmt.Sprintf("failed to send usage: %v", err))
-	}
-}
-
 func ExecuteTemplate(name, temp string, fields interface{}) string {
 	var tpl bytes.Buffer
 	if err := template.Must(template.New(name).Parse(temp)).Execute(&tpl, fields); err != nil {
@@ -230,7 +195,7 @@ func applyTelemetry(productId, resource, verb string, f func(context.Context, *s
 	return func(ctx context.Context, data *schema.ResourceData, meta interface{}) diag.Diagnostics {
 		// best effort. Go routine it
 		featureUsage := fmt.Sprintf("Resource/%s/%s", resource, verb)
-		go SendUsage(ctx, meta.(ProvderMetadata).Client, productId, featureUsage)
+		go util.SendUsage(ctx, meta.(util.ProvderMetadata).Client, productId, featureUsage)
 		return f(ctx, data, meta)
 	}
 }
@@ -309,52 +274,4 @@ func CheckArtifactoryLicense(client *resty.Client, licenseTypesToCheck ...string
 
 type Identifiable interface {
 	Id() string
-}
-
-func CheckVersion(versionToCheck string, supportedVersion string) (bool, error) {
-	v1, err := version.NewVersion(versionToCheck)
-	if err != nil {
-		return false, fmt.Errorf("could not parse version: %s", versionToCheck)
-	}
-
-	v2, err := version.NewVersion(supportedVersion)
-	if err != nil {
-		return false, fmt.Errorf("could not parse version: %s", supportedVersion)
-	}
-
-	return v1.GreaterThanOrEqual(v2), nil
-}
-
-func GetArtifactoryVersion(client *resty.Client) (string, error) {
-	type ArtifactoryVersion struct {
-		Version string `json:"version"`
-	}
-
-	artifactoryVersion := ArtifactoryVersion{}
-	_, err := client.R().
-		SetResult(&artifactoryVersion).
-		Get("/artifactory/api/system/version")
-
-	if err != nil {
-		return "", fmt.Errorf("failed to get Artifactory version. %s", err)
-	}
-
-	return artifactoryVersion.Version, nil
-}
-
-func GetXrayVersion(client *resty.Client) (string, error) {
-	type XrayVersion struct {
-		Version string `json:"xray_version"`
-	}
-
-	xrayVersion := XrayVersion{}
-	_, err := client.R().
-		SetResult(&xrayVersion).
-		Get("/xray/api/v1/system/version")
-
-	if err != nil {
-		return "", fmt.Errorf("failed to get Xray version. %s", err)
-	}
-
-	return xrayVersion.Version, nil
 }
