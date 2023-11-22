@@ -1,3 +1,11 @@
+## 1.20.4 (Nov 22, 2023)
+
+IMPROVEMENTS:
+
+* Update Terraform packages.
+
+PR [45](https://github.com/jfrog/terraform-provider-shared/pull/45)
+
 ## 1.20.3 (Nov 20, 2023)
 
 IMPROVEMENTS:
