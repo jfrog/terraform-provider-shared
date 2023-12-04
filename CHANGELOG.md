@@ -1,3 +1,13 @@
+## 1.21.0 (Dec 5, 2023)
+
+IMPROVEMENTS:
+
+* Add `ProductId` to `ProviderMetadata` struct to support Framework resource
+* Add send usage funcs for each resource method for Framework resource
+* Move utility function `ExecuteTemplate` that are not specific to SDKv2 or Framework to `util.go` so they can be used without pulling in either library.
+
+PR [47](https://github.com/jfrog/terraform-provider-shared/pull/47)
+
 ## 1.20.4 (Nov 22, 2023)
 
 IMPROVEMENTS:
