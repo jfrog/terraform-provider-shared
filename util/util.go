@@ -1,8 +1,10 @@
 package util
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"html/template"
 	"os"
 
 	"github.com/go-resty/resty/v2"
@@ -12,8 +14,29 @@ import (
 
 type ProvderMetadata struct {
 	Client             *resty.Client
+	ProductId          string
 	ArtifactoryVersion string
 	XrayVersion        string
+}
+
+func resourceFeatureUsage(resourceName, method string) string {
+	return fmt.Sprintf("Resource/%s/%s", resourceName, method)
+}
+
+func SendUsageResourceCreate(ctx context.Context, client *resty.Client, productId, resourceName string) {
+	SendUsage(ctx, client, productId, resourceFeatureUsage(resourceName, "CREATE"))
+}
+
+func SendUsageResourceRead(ctx context.Context, client *resty.Client, productId, resourceName string) {
+	SendUsage(ctx, client, productId, resourceFeatureUsage(resourceName, "READ"))
+}
+
+func SendUsageResourceUpdate(ctx context.Context, client *resty.Client, productId, resourceName string) {
+	SendUsage(ctx, client, productId, resourceFeatureUsage(resourceName, "UPDATE"))
+}
+
+func SendUsageResourceDelete(ctx context.Context, client *resty.Client, productId, resourceName string) {
+	SendUsage(ctx, client, productId, resourceFeatureUsage(resourceName, "DELETE"))
 }
 
 func SendUsage(ctx context.Context, client *resty.Client, productId string, featureUsages ...string) {
@@ -99,4 +122,13 @@ func CheckEnvVars(vars []string, dv string) string {
 		}
 	}
 	return dv
+}
+
+func ExecuteTemplate(name, temp string, fields interface{}) string {
+	var tpl bytes.Buffer
+	if err := template.Must(template.New(name).Parse(temp)).Execute(&tpl, fields); err != nil {
+		panic(err)
+	}
+
+	return tpl.String()
 }
