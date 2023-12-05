@@ -1,7 +1,6 @@
 package sdk
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"math"
@@ -9,7 +8,6 @@ import (
 	"regexp"
 	"sort"
 	"strings"
-	"text/template"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -177,15 +175,6 @@ func FieldToHcl(field reflect.StructField) string {
 	}
 	result := strings.Join(lowerFields, "_")
 	return result
-}
-
-func ExecuteTemplate(name, temp string, fields interface{}) string {
-	var tpl bytes.Buffer
-	if err := template.Must(template.New(name).Parse(temp)).Execute(&tpl, fields); err != nil {
-		panic(err)
-	}
-
-	return tpl.String()
 }
 
 func applyTelemetry(productId, resource, verb string, f func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
