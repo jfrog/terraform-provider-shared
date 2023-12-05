@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"html/template"
 	"os"
+	"text/template"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/hashicorp/go-version"
