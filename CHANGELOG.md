@@ -1,4 +1,12 @@
-## 1.21.0 (Dec 5, 2023)
+## 1.21.1 (Dec 5, 2023)
+
+BUG FIXES:
+
+* Fix incorrect template package for `ExecuteTemplate` function
+
+PR [48](https://github.com/jfrog/terraform-provider-shared/pull/48)
+
+## 1.21.0 (Dec 4, 2023)
 
 IMPROVEMENTS:
 
