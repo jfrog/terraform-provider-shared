@@ -1,3 +1,12 @@
+## 1.21.2 (Dec 21, 2023)
+
+IMPROVEMENTS:
+
+* Upgrade Resty to 2.9.1
+* Compile using Go 1.21
+
+PR: [#50](https://github.com/jfrog/terraform-provider-shared/pull/50)
+
 ## 1.21.1 (Dec 5, 2023)
 
 BUG FIXES:
