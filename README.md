@@ -8,7 +8,7 @@ In general, this repository follows [Terraform's Versioning Specification](https
 
 ## License
 
-Copyright (c) 2022 JFrog.
+Copyright (c) 2024 JFrog.
 
 Apache 2.0 licensed, see [LICENSE][LICENSE] file.
 
