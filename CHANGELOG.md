@@ -1,3 +1,11 @@
+## 1.21.3 (Jan 3, 2024)
+
+IMPROVEMENTS:
+
+* Upgrade Resty to 2.11.1
+
+PR: [#51](https://github.com/jfrog/terraform-provider-shared/pull/51)
+
 ## 1.21.2 (Dec 21, 2023)
 
 IMPROVEMENTS:
