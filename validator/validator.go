@@ -66,6 +66,10 @@ var CommaSeperatedList = validation.ToDiagFunc(
 	validation.StringMatch(regexp.MustCompile(`.+(?:,.+)*`), "must be comma separated string"),
 )
 
+var RepoKey = validation.ToDiagFunc(
+	validation.StringDoesNotContainAny(" !@#$%^&*()+={}[]:;<>,/?~`|\\"),
+)
+
 var ProjectKey = validation.ToDiagFunc(
 	validation.StringMatch(regexp.MustCompile(`^[a-z][a-z0-9\-]{1,31}$`), "project_key must be 2 - 32 lowercase alphanumeric and hyphen characters"),
 )

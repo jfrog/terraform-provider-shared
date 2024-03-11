@@ -1,3 +1,11 @@
+## 1.22.0 (Mar 11, 2024)
+
+IMPROVEMENTS:
+
+* Add `RepoKey` validation
+
+PR: [#53](https://github.com/jfrog/terraform-provider-shared/pull/53)
+
 ## 1.21.3 (Jan 3, 2024)
 
 IMPROVEMENTS:
