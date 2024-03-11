@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"os"
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/go-resty/resty/v2"
@@ -34,7 +36,8 @@ func Build(URL, productId string) (*resty.Client, error) {
 				return nil
 			}
 
-			if response.StatusCode() >= http.StatusBadRequest {
+			tfLogLevel := strings.ToLower(os.Getenv("TF_LOG"))
+			if response.StatusCode() >= http.StatusBadRequest && slices.Contains([]string{"debug", "trace"}, tfLogLevel) {
 				return fmt.Errorf("\n%d %s %s\n%s", response.StatusCode(), response.Request.Method, response.Request.URL, string(response.Body()[:]))
 			}
 			return nil
