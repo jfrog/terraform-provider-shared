@@ -1,3 +1,11 @@
+## 1.22.1 (Mar 20, 2024)
+
+IMPROVEMENTS:
+
+* Improve `RepoKey` validation to match Artifactory web UI.
+
+PR: [#55](https://github.com/jfrog/terraform-provider-shared/pull/55)
+
 ## 1.22.0 (Mar 11, 2024)
 
 IMPROVEMENTS:
