@@ -66,8 +66,13 @@ var CommaSeperatedList = validation.ToDiagFunc(
 	validation.StringMatch(regexp.MustCompile(`.+(?:,.+)*`), "must be comma separated string"),
 )
 
-var RepoKey = validation.ToDiagFunc(
-	validation.StringDoesNotContainAny(" !@#$%^&*()+={}[]:;<>,/?~`|\\"),
+var RepoKey = validation.AllDiag(
+	validation.ToDiagFunc(
+		validation.StringLenBetween(1, 64),
+	),
+	validation.ToDiagFunc(
+		validation.StringDoesNotContainAny(" !@#$%^&*()+={}[]:;<>,/?~`|\\"),
+	),
 )
 
 var ProjectKey = validation.ToDiagFunc(
