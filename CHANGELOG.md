@@ -1,3 +1,12 @@
+## 1.22.2 (Apr 4, 2024)
+
+BUG FIXES:
+
+* Remove special error code handling in response middleware
+* Fix error handling in check license and version func
+
+PR: [#56](https://github.com/jfrog/terraform-provider-shared/pull/56)
+
 ## 1.22.1 (Mar 20, 2024)
 
 IMPROVEMENTS:
