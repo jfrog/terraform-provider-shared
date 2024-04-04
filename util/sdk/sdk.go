@@ -9,7 +9,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/go-resty/resty/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/jfrog/terraform-provider-shared/util"
@@ -220,49 +219,6 @@ func AddTelemetry(productId string, resourceMap map[string]*schema.Resource) map
 		}
 	}
 	return resourceMap
-}
-
-func CheckArtifactoryLicense(client *resty.Client, licenseTypesToCheck ...string) diag.Diagnostics {
-	if len(licenseTypesToCheck) == 0 {
-		return diag.Errorf("failed: licenseTypesToCheck is empty")
-	}
-
-	type License struct {
-		Type string `json:"type"`
-	}
-
-	type LicensesWrapper struct {
-		License
-		Licenses []License `json:"licenses"` // HA licenses returns as an array instead
-	}
-
-	licensesWrapper := LicensesWrapper{}
-	resp, err := client.R().
-		SetResult(&licensesWrapper).
-		Get("/artifactory/api/system/license")
-
-	if err != nil {
-		return diag.Errorf("Failed to check for license. If your usage doesn't require admin permission, you can set `check_license` attribute to `false` to skip this check. %s", err)
-	}
-
-	if resp.IsError() {
-		return diag.Errorf("Failed to check for license. If your usage doesn't require admin permission, you can set `check_license` attribute to `false` to skip this check. %s", resp.String())
-	}
-
-	var licenseType string
-	if len(licensesWrapper.Licenses) > 0 {
-		licenseType = licensesWrapper.Licenses[0].Type
-	} else {
-		licenseType = licensesWrapper.Type
-	}
-
-	licenseTypesToCheckRegex := fmt.Sprintf("(?:%s)", strings.Join(licenseTypesToCheck, "|"))
-	if matched, _ := regexp.MatchString(licenseTypesToCheckRegex, licenseType); !matched {
-		licenseTypesToCheckMessage := strings.Join(licenseTypesToCheck, " or ")
-		return diag.Errorf("Artifactory requires %s license to work with Terraform! If your usage doesn't require a license, you can set `check_license` attribute to `false` to skip this check.", licenseTypesToCheckMessage)
-	}
-
-	return nil
 }
 
 type Identifiable interface {
