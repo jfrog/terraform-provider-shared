@@ -5,6 +5,8 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"regexp"
+	"strings"
 	"text/template"
 
 	"github.com/go-resty/resty/v2"
@@ -69,6 +71,49 @@ func SendUsage(ctx context.Context, client *resty.Client, productId string, feat
 	if resp.IsError() {
 		tflog.Info(ctx, fmt.Sprintf("failed to send usage: %v", resp.String()))
 	}
+}
+
+func CheckArtifactoryLicense(client *resty.Client, licenseTypesToCheck ...string) error {
+	if len(licenseTypesToCheck) == 0 {
+		return fmt.Errorf("licenseTypesToCheck is empty")
+	}
+
+	type License struct {
+		Type string `json:"type"`
+	}
+
+	type LicensesWrapper struct {
+		License
+		Licenses []License `json:"licenses"` // HA licenses returns as an array instead
+	}
+
+	licensesWrapper := LicensesWrapper{}
+	resp, err := client.R().
+		SetResult(&licensesWrapper).
+		Get("/artifactory/api/system/license")
+
+	if err != nil {
+		return fmt.Errorf("failed to check for license. If your usage doesn't require admin permission, you can set `check_license` attribute to `false` to skip this check. %s", err.Error())
+	}
+
+	if resp.IsError() {
+		return fmt.Errorf("failed to check for license. If your usage doesn't require admin permission, you can set `check_license` attribute to `false` to skip this check. %s", resp.String())
+	}
+
+	var licenseType string
+	if len(licensesWrapper.Licenses) > 0 {
+		licenseType = licensesWrapper.Licenses[0].Type
+	} else {
+		licenseType = licensesWrapper.Type
+	}
+
+	licenseTypesToCheckRegex := fmt.Sprintf("(?:%s)", strings.Join(licenseTypesToCheck, "|"))
+	if matched, _ := regexp.MatchString(licenseTypesToCheckRegex, licenseType); !matched {
+		licenseTypesToCheckMessage := strings.Join(licenseTypesToCheck, " or ")
+		return fmt.Errorf("artifactory requires %s license to work with Terraform! If your usage doesn't require a license, you can set `check_license` attribute to `false` to skip this check", licenseTypesToCheckMessage)
+	}
+
+	return nil
 }
 
 func CheckVersion(versionToCheck string, supportedVersion string) (bool, error) {

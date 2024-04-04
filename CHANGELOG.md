@@ -4,6 +4,7 @@ BUG FIXES:
 
 * Remove special error code handling in response middleware
 * Fix error handling in check license and version func
+* Consolidate CheckArtifactoryLicense funcs into single version for both SDKv2 and Framework
 
 PR: [#56](https://github.com/jfrog/terraform-provider-shared/pull/56)
 

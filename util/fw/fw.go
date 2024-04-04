@@ -2,12 +2,8 @@ package fw
 
 import (
 	"fmt"
-	"regexp"
-	"strings"
 
-	"github.com/go-resty/resty/v2"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
@@ -74,51 +70,4 @@ func UnableToDeleteResourceError(resp *resource.DeleteResponse, err string) {
 			"Please retry the operation or report this issue to the provider developers.\n\n"+
 			"Error: "+err,
 	)
-}
-
-func CheckArtifactoryLicense(client *resty.Client, licenseTypesToCheck ...string) (ds diag.Diagnostics) {
-	if len(licenseTypesToCheck) == 0 {
-		ds.AddError("licenseTypesToCheck is empty", "")
-		return
-	}
-
-	type License struct {
-		Type string `json:"type"`
-	}
-
-	type LicensesWrapper struct {
-		License
-		Licenses []License `json:"licenses"` // HA licenses returns as an array instead
-	}
-
-	licensesWrapper := LicensesWrapper{}
-	resp, err := client.R().
-		SetResult(&licensesWrapper).
-		Get("/artifactory/api/system/license")
-
-	if err != nil {
-		ds.AddError("Failed to check for license. If your usage doesn't require admin permission, you can set `check_license` attribute to `false` to skip this check.", err.Error())
-		return
-	}
-
-	if resp.IsError() {
-		ds.AddError("Failed to check for license. If your usage doesn't require admin permission, you can set `check_license` attribute to `false` to skip this check.", resp.String())
-		return
-	}
-
-	var licenseType string
-	if len(licensesWrapper.Licenses) > 0 {
-		licenseType = licensesWrapper.Licenses[0].Type
-	} else {
-		licenseType = licensesWrapper.Type
-	}
-
-	licenseTypesToCheckRegex := fmt.Sprintf("(?:%s)", strings.Join(licenseTypesToCheck, "|"))
-	if matched, _ := regexp.MatchString(licenseTypesToCheckRegex, licenseType); !matched {
-		licenseTypesToCheckMessage := strings.Join(licenseTypesToCheck, " or ")
-		ds.AddError(fmt.Sprintf("Artifactory requires %s license to work with Terraform! If your usage doesn't require a license, you can set `check_license` attribute to `false` to skip this check.", licenseTypesToCheckMessage), "")
-		return
-	}
-
-	return
 }
