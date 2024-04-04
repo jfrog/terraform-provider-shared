@@ -1,10 +1,17 @@
+## 1.22.3 (Apr 4, 2024)
+
+BUG FIXES:
+
+* Consolidate CheckArtifactoryLicense funcs into single version for both SDKv2 and Framework
+
+PR: [#57](https://github.com/jfrog/terraform-provider-shared/pull/57)
+
 ## 1.22.2 (Apr 4, 2024)
 
 BUG FIXES:
 
 * Remove special error code handling in response middleware
 * Fix error handling in check license and version func
-* Consolidate CheckArtifactoryLicense funcs into single version for both SDKv2 and Framework
 
 PR: [#56](https://github.com/jfrog/terraform-provider-shared/pull/56)
 
