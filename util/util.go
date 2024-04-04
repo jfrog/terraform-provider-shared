@@ -58,12 +58,16 @@ func SendUsage(ctx context.Context, client *resty.Client, productId string, feat
 
 	usage := UsageStruct{productId, features}
 
-	_, err := client.R().
+	resp, err := client.R().
 		SetBody(usage).
 		Post("artifactory/api/system/usage")
 
 	if err != nil {
 		tflog.Info(ctx, fmt.Sprintf("failed to send usage: %v", err))
+	}
+
+	if resp.IsError() {
+		tflog.Info(ctx, fmt.Sprintf("failed to send usage: %v", resp.String()))
 	}
 }
 
@@ -87,12 +91,16 @@ func GetArtifactoryVersion(client *resty.Client) (string, error) {
 	}
 
 	artifactoryVersion := ArtifactoryVersion{}
-	_, err := client.R().
+	resp, err := client.R().
 		SetResult(&artifactoryVersion).
 		Get("/artifactory/api/system/version")
 
 	if err != nil {
 		return "", fmt.Errorf("failed to get Artifactory version. %s", err)
+	}
+
+	if resp.IsError() {
+		return "", fmt.Errorf("failed to get Artifactory version. %s", resp.String())
 	}
 
 	return artifactoryVersion.Version, nil
@@ -104,12 +112,16 @@ func GetXrayVersion(client *resty.Client) (string, error) {
 	}
 
 	xrayVersion := XrayVersion{}
-	_, err := client.R().
+	resp, err := client.R().
 		SetResult(&xrayVersion).
 		Get("/xray/api/v1/system/version")
 
 	if err != nil {
 		return "", fmt.Errorf("failed to get Xray version. %s", err)
+	}
+
+	if resp.IsError() {
+		return "", fmt.Errorf("failed to get Xray version. %s", resp.String())
 	}
 
 	return xrayVersion.Version, nil

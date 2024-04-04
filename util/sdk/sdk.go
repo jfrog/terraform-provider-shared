@@ -237,12 +237,16 @@ func CheckArtifactoryLicense(client *resty.Client, licenseTypesToCheck ...string
 	}
 
 	licensesWrapper := LicensesWrapper{}
-	_, err := client.R().
+	resp, err := client.R().
 		SetResult(&licensesWrapper).
 		Get("/artifactory/api/system/license")
 
 	if err != nil {
 		return diag.Errorf("Failed to check for license. If your usage doesn't require admin permission, you can set `check_license` attribute to `false` to skip this check. %s", err)
+	}
+
+	if resp.IsError() {
+		return diag.Errorf("Failed to check for license. If your usage doesn't require admin permission, you can set `check_license` attribute to `false` to skip this check. %s", resp.String())
 	}
 
 	var licenseType string
