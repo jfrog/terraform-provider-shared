@@ -1,3 +1,12 @@
+## 1.22.4 (Apr 4, 2024)
+
+IMPROVEMENTS:
+
+* Enable Resty's debug logging when `TF_LOG` is set to `DEBUG` or `TRACE`.
+
+Issue [#16](https://github.com/jfrog/terraform-provider-shared/issues/16)
+PR: [#58](https://github.com/jfrog/terraform-provider-shared/pull/57)
+
 ## 1.22.3 (Apr 4, 2024)
 
 BUG FIXES:
