@@ -2,9 +2,10 @@ package client
 
 import (
 	"fmt"
-	"net/http"
 	"net/url"
+	"os"
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/go-resty/resty/v2"
@@ -21,19 +22,16 @@ func Build(URL, productId string) (*resty.Client, error) {
 
 	restyBase := resty.New().
 		SetBaseURL(baseUrl).
-		OnAfterResponse(func(client *resty.Client, response *resty.Response) error {
-			if response == nil {
-				return fmt.Errorf("no response found")
+		OnBeforeRequest(func(c *resty.Client, r *resty.Request) error {
+			tfLogLevel := strings.ToLower(os.Getenv("TF_LOG"))
+			if slices.Contains([]string{"debug", "trace"}, tfLogLevel) {
+				r.SetDebug(true)
 			}
-
-			// Don't log the response if we have 413 erorr from call home request
-			// This happens when we make request to call home endpoint too frequently
-			// for Artifactory to aggregate. Generally only happens during test execution
-			if strings.Contains(response.Request.URL, "artifactory/api/system/usage") &&
-				response.StatusCode() == http.StatusRequestEntityTooLarge {
-				return nil
-			}
-
+			return nil
+		}).
+		OnRequestLog(func(r *resty.RequestLog) error {
+			// Never log auth token
+			r.Header.Set("Authorization", "<REDACTED>")
 			return nil
 		}).
 		SetHeader("content-type", "application/json").
