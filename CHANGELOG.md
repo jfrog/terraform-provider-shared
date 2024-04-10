@@ -1,3 +1,11 @@
+## 1.23.0 (Apr 11, 2024)
+
+IMPROVEMENTS:
+
+* Add support for exchanging OIDC ID token for access token using JFrog OIDC configuration
+
+PR: [#59](https://github.com/jfrog/terraform-provider-shared/pull/59)
+
 ## 1.22.4 (Apr 4, 2024)
 
 IMPROVEMENTS:
@@ -5,7 +13,7 @@ IMPROVEMENTS:
 * Enable Resty's debug logging when `TF_LOG` is set to `DEBUG` or `TRACE`.
 
 Issue [#16](https://github.com/jfrog/terraform-provider-shared/issues/16)
-PR: [#58](https://github.com/jfrog/terraform-provider-shared/pull/57)
+PR: [#58](https://github.com/jfrog/terraform-provider-shared/pull/58)
 
 ## 1.22.3 (Apr 4, 2024)
 
