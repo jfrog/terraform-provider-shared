@@ -73,6 +73,54 @@ func SendUsage(ctx context.Context, client *resty.Client, productId string, feat
 	}
 }
 
+type OIDCAccessTokenRequest struct {
+	GrantType        string `json:"grant_type"`
+	SubjectTokenType string `json:"subject_token_type"`
+	SubjectToken     string `json:"subject_token"`
+	ProviderName     string `json:"provider_name"`
+}
+
+type OIDCAccessTokenResponse struct {
+	AccessToken string `json:"access_token"`
+}
+
+// OIDCTokenExchange use TFC_WORKLOAD_IDENTITY_TOKEN env var value to exchange for a access token using
+// OIDC provider configured on JFrog platform
+func OIDCTokenExchange(ctx context.Context, client *resty.Client, providerName string) (string, error) {
+	if client == nil {
+		return "", fmt.Errorf("client is nil")
+	}
+
+	tfcWorkloadIdentityToken := CheckEnvVars([]string{"TFC_WORKLOAD_IDENTITY_TOKEN"}, "")
+	if tfcWorkloadIdentityToken == "" || providerName == "" {
+		tflog.Info(ctx, "either TFC_WORKLOAD_IDENTITY_TOKEN or provider name is not set")
+		return "", nil
+	}
+
+	payload := OIDCAccessTokenRequest{
+		GrantType:        "urn:ietf:params:oauth:grant-type:token-exchange",
+		SubjectTokenType: "urn:ietf:params:oauth:token-type:id_token",
+		SubjectToken:     tfcWorkloadIdentityToken,
+		ProviderName:     providerName,
+	}
+
+	var result OIDCAccessTokenResponse
+	response, err := client.R().
+		SetBody(payload).
+		SetResult(&result).
+		Post("/access/api/v1/oidc/token")
+
+	if err != nil {
+		return "", err
+	}
+
+	if response.IsError() {
+		return "", fmt.Errorf(response.String())
+	}
+
+	return result.AccessToken, nil
+}
+
 func CheckArtifactoryLicense(client *resty.Client, licenseTypesToCheck ...string) error {
 	if len(licenseTypesToCheck) == 0 {
 		return fmt.Errorf("licenseTypesToCheck is empty")
