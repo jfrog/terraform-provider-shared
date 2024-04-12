@@ -182,8 +182,11 @@ func applyTelemetry(productId, resource, verb string, f func(context.Context, *s
 	}
 	return func(ctx context.Context, data *schema.ResourceData, meta interface{}) diag.Diagnostics {
 		// best effort. Go routine it
-		featureUsage := fmt.Sprintf("Resource/%s/%s", resource, verb)
-		go util.SendUsage(ctx, meta.(util.ProvderMetadata).Client, productId, featureUsage)
+		if m, ok := meta.(util.ProviderMetadata); ok {
+			featureUsage := fmt.Sprintf("Resource/%s/%s", resource, verb)
+			go util.SendUsage(ctx, m.Client, productId, featureUsage)
+		}
+
 		return f(ctx, data, meta)
 	}
 }

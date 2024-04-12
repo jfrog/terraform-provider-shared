@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
-type ProvderMetadata struct {
+type ProviderMetadata struct {
 	Client             *resty.Client
 	ProductId          string
 	ArtifactoryVersion string

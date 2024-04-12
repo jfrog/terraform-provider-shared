@@ -1,3 +1,10 @@
+## 1.24.0 (Apr 12, 2024)
+
+IMPROVEMENTS:
+
+* Fix typo in provider metadata type name
+* Improve error checking on applyTelemetry()
+
 ## 1.23.0 (Apr 11, 2024)
 
 IMPROVEMENTS:
