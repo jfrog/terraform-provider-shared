@@ -1,3 +1,9 @@
+## 1.25.0 (Apr 30, 2024)
+
+IMPROVEMENTS:
+
+* Add plan checking func for acceptance test
+
 ## 1.24.0 (Apr 12, 2024)
 
 IMPROVEMENTS:
