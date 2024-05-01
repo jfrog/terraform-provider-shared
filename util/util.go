@@ -44,6 +44,7 @@ func SendUsageResourceDelete(ctx context.Context, req *resty.Request, productId,
 type Feature struct {
 	FeatureId string `json:"featureId"`
 }
+
 type UsageStruct struct {
 	ProductId string    `json:"productId"`
 	Features  []Feature `json:"features"`
