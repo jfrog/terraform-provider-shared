@@ -184,7 +184,7 @@ func applyTelemetry(productId, resource, verb string, f func(context.Context, *s
 		// best effort. Go routine it
 		if m, ok := meta.(util.ProviderMetadata); ok {
 			featureUsage := fmt.Sprintf("Resource/%s/%s", resource, verb)
-			go util.SendUsage(ctx, m.Client, productId, featureUsage)
+			go util.SendUsage(ctx, m.Client.R(), productId, featureUsage)
 		}
 
 		return f(ctx, data, meta)

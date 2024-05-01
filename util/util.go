@@ -25,29 +25,34 @@ func resourceFeatureUsage(resourceName, method string) string {
 	return fmt.Sprintf("Resource/%s/%s", resourceName, method)
 }
 
-func SendUsageResourceCreate(ctx context.Context, client *resty.Client, productId, resourceName string) {
-	SendUsage(ctx, client, productId, resourceFeatureUsage(resourceName, "CREATE"))
+func SendUsageResourceCreate(ctx context.Context, req *resty.Request, productId, resourceName string) {
+	SendUsage(ctx, req, productId, resourceFeatureUsage(resourceName, "CREATE"))
 }
 
-func SendUsageResourceRead(ctx context.Context, client *resty.Client, productId, resourceName string) {
-	SendUsage(ctx, client, productId, resourceFeatureUsage(resourceName, "READ"))
+func SendUsageResourceRead(ctx context.Context, req *resty.Request, productId, resourceName string) {
+	SendUsage(ctx, req, productId, resourceFeatureUsage(resourceName, "READ"))
 }
 
-func SendUsageResourceUpdate(ctx context.Context, client *resty.Client, productId, resourceName string) {
-	SendUsage(ctx, client, productId, resourceFeatureUsage(resourceName, "UPDATE"))
+func SendUsageResourceUpdate(ctx context.Context, req *resty.Request, productId, resourceName string) {
+	SendUsage(ctx, req, productId, resourceFeatureUsage(resourceName, "UPDATE"))
 }
 
-func SendUsageResourceDelete(ctx context.Context, client *resty.Client, productId, resourceName string) {
-	SendUsage(ctx, client, productId, resourceFeatureUsage(resourceName, "DELETE"))
+func SendUsageResourceDelete(ctx context.Context, req *resty.Request, productId, resourceName string) {
+	SendUsage(ctx, req, productId, resourceFeatureUsage(resourceName, "DELETE"))
 }
 
-func SendUsage(ctx context.Context, client *resty.Client, productId string, featureUsages ...string) {
-	type Feature struct {
-		FeatureId string `json:"featureId"`
-	}
-	type UsageStruct struct {
-		ProductId string    `json:"productId"`
-		Features  []Feature `json:"features"`
+type Feature struct {
+	FeatureId string `json:"featureId"`
+}
+type UsageStruct struct {
+	ProductId string    `json:"productId"`
+	Features  []Feature `json:"features"`
+}
+
+func SendUsage(ctx context.Context, req *resty.Request, productId string, featureUsages ...string) {
+	if req == nil {
+		tflog.Info(ctx, "SendUsage req is nil. Skipping.")
+		return
 	}
 
 	features := []Feature{
@@ -60,7 +65,7 @@ func SendUsage(ctx context.Context, client *resty.Client, productId string, feat
 
 	usage := UsageStruct{productId, features}
 
-	resp, err := client.R().
+	resp, err := req.
 		SetBody(usage).
 		Post("artifactory/api/system/usage")
 

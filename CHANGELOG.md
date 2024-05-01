@@ -1,3 +1,9 @@
+## 1.25.1 (May 2, 2024)
+
+IMPROVEMENTS:
+
+* Switch SendUsage func arg to Resty Request to make gorountine-safe
+
 ## 1.25.0 (Apr 30, 2024)
 
 IMPROVEMENTS:
