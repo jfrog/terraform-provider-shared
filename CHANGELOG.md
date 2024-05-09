@@ -1,3 +1,10 @@
+## 1.25.2 (May 10, 2024)
+
+IMPROVEMENTS:
+
+* Add project_key validator for Framework
+* Update CheckPlan func to improve text output and filtering
+
 ## 1.25.1 (May 2, 2024)
 
 IMPROVEMENTS:

@@ -87,19 +87,22 @@ func MkNames(name, resource string) (int, string, string) {
 	return id, fmt.Sprintf("%s.%s", resource, n), n
 }
 
-var ConfigPlanChecks = resource.ConfigPlanChecks{
-	PostApplyPreRefresh: []plancheck.PlanCheck{
-		DebugPlan("PostApplyPreRefresh"),
-	},
-	PostApplyPostRefresh: []plancheck.PlanCheck{
-		DebugPlan("PostApplyPostRefresh"),
-	},
+var ConfigPlanChecks = func(resourceName string) resource.ConfigPlanChecks {
+	return resource.ConfigPlanChecks{
+		PostApplyPreRefresh: []plancheck.PlanCheck{
+			DebugPlan(resourceName, "PostApplyPreRefresh"),
+		},
+		PostApplyPostRefresh: []plancheck.PlanCheck{
+			DebugPlan(resourceName, "PostApplyPostRefresh"),
+		},
+	}
 }
 
 var _ plancheck.PlanCheck = PlanCheck{}
 
 type PlanCheck struct {
-	Stage string
+	Stage        string
+	ResourceName string
 }
 
 func (p PlanCheck) CheckPlan(ctx context.Context, req plancheck.CheckPlanRequest, resp *plancheck.CheckPlanResponse) {
@@ -138,10 +141,18 @@ func (p PlanCheck) CheckPlan(ctx context.Context, req plancheck.CheckPlanRequest
 	})
 
 	if len(req.Plan.ResourceDrift) > 0 {
-		drifts := lo.Map(req.Plan.ResourceDrift, func(c *tfjson.ResourceChange, index int) string {
-			return fmt.Sprintf("Name: %s, Before: %v, After: %v", c.Name, c.Change.Before, c.Change.After)
+		drifts := lo.FilterMap(req.Plan.ResourceDrift, func(c *tfjson.ResourceChange, index int) (string, bool) {
+			tflog.Debug(ctx, "CheckPlan", map[string]interface{}{
+				"p.ResourceName":                         p.ResourceName,
+				"fmt.Sprintf(\"%s.%s\", c.Type, c.Name)": fmt.Sprintf("%s.%s", c.Type, c.Name),
+			})
+			driftsMessage := fmt.Sprintf("Name: %s.%s\n\nBefore: %v\n\nAfter: %v\n", c.Type, c.Name, c.Change.Before, c.Change.After)
+			shouldInclude := p.ResourceName == "" || p.ResourceName == fmt.Sprintf("%s.%s", c.Type, c.Name)
+			return driftsMessage, shouldInclude
 		})
-		resp.Error = fmt.Errorf("expected empty plan, but has resouce drifts(s): %v", strings.Join(drifts, ", "))
+		if len(drifts) > 0 {
+			resp.Error = fmt.Errorf("expected empty plan, but has resource drift(s):\n\n%v", strings.Join(drifts, "\n\n"))
+		}
 		return
 	}
 
@@ -158,8 +169,9 @@ func (p PlanCheck) CheckPlan(ctx context.Context, req plancheck.CheckPlanRequest
 	}
 }
 
-func DebugPlan(stage string) plancheck.PlanCheck {
+func DebugPlan(resourceName, stage string) plancheck.PlanCheck {
 	return PlanCheck{
-		Stage: stage,
+		ResourceName: resourceName,
+		Stage:        stage,
 	}
 }
