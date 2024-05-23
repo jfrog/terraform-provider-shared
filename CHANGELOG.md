@@ -1,3 +1,10 @@
+## 1.25.3 (May 24, 2024)
+
+IMPROVEMENTS:
+
+* Add RepoKey validator
+* Check resty log for header existence before redacting it
+
 ## 1.25.2 (May 10, 2024)
 
 IMPROVEMENTS:
