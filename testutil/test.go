@@ -1,7 +1,6 @@
 package testutil
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -9,7 +8,6 @@ import (
 	"reflect"
 	"strings"
 	"testing"
-	"text/template"
 
 	"github.com/go-resty/resty/v2"
 	tfjson "github.com/hashicorp/terraform-json"
@@ -30,15 +28,6 @@ func RandBool() bool {
 
 func RandSelect(items ...interface{}) interface{} {
 	return items[RandomInt()%len(items)]
-}
-
-func ExecuteTemplate(name, temp string, fields interface{}) string {
-	var tpl bytes.Buffer
-	if err := template.Must(template.New(name).Parse(temp)).Execute(&tpl, fields); err != nil {
-		panic(err)
-	}
-
-	return tpl.String()
 }
 
 func GetEnvVarWithFallback(t *testing.T, envVars ...string) string {
