@@ -22,6 +22,7 @@ func Build(URL, productId string) (*resty.Client, error) {
 
 	restyBase := resty.New().
 		SetBaseURL(baseUrl).
+		SetDebug(strings.ToLower(os.Getenv("TF_LOG")) == "debug").
 		OnBeforeRequest(func(c *resty.Client, r *resty.Request) error {
 			tfLogLevel := strings.ToLower(os.Getenv("TF_LOG"))
 			if slices.Contains([]string{"debug", "trace"}, tfLogLevel) {
@@ -29,9 +30,11 @@ func Build(URL, productId string) (*resty.Client, error) {
 			}
 			return nil
 		}).
-		OnRequestLog(func(r *resty.RequestLog) error {
+		OnRequestLog(func(log *resty.RequestLog) error {
 			// Never log auth token
-			r.Header.Set("Authorization", "<REDACTED>")
+			if log.Header.Get("Authorization") != "" {
+				log.Header.Set("Authorization", "<REDACTED>")
+			}
 			return nil
 		}).
 		SetHeader("content-type", "application/json").
