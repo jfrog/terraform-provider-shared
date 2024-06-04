@@ -243,3 +243,7 @@ func ExecuteTemplate(name, temp string, fields interface{}) string {
 
 	return tpl.String()
 }
+
+type Identifiable interface {
+	Id() string
+}

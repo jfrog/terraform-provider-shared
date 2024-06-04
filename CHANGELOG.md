@@ -1,3 +1,9 @@
+## 1.25.4 (June 4, 2024)
+
+IMPROVEMENTS:
+
+* Move Identifiable() out of `/util/sdk` package path to `/util`
+
 ## 1.25.3 (May 24, 2024)
 
 IMPROVEMENTS:

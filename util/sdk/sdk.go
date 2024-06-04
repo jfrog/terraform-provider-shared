@@ -223,7 +223,3 @@ func AddTelemetry(productId string, resourceMap map[string]*schema.Resource) map
 	}
 	return resourceMap
 }
-
-type Identifiable interface {
-	Id() string
-}
