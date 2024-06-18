@@ -1,3 +1,9 @@
+## 1.25.5 (June 18, 2024)
+
+IMPROVEMENTS:
+
+* Add `RegexNotMatches` Plugin Framework validator
+
 ## 1.25.4 (June 4, 2024)
 
 IMPROVEMENTS:
