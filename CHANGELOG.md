@@ -1,3 +1,9 @@
+## 1.26.0 (October 15, 2024)
+
+IMPROVEMENTS:
+
+* Add support for multiple TFC Workload Identity Token env var
+
 ## 1.25.5 (June 18, 2024)
 
 IMPROVEMENTS:
