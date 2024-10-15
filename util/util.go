@@ -92,15 +92,26 @@ type OIDCAccessTokenResponse struct {
 
 // OIDCTokenExchange use TFC_WORKLOAD_IDENTITY_TOKEN env var value to exchange for a access token using
 // OIDC provider configured on JFrog platform
-func OIDCTokenExchange(ctx context.Context, client *resty.Client, providerName string) (string, error) {
+func OIDCTokenExchange(ctx context.Context, client *resty.Client, providerName, credentialTag string) (string, error) {
 	if client == nil {
 		return "", fmt.Errorf("client is nil")
 	}
 
-	tfcWorkloadIdentityToken := CheckEnvVars([]string{"TFC_WORKLOAD_IDENTITY_TOKEN"}, "")
-	if tfcWorkloadIdentityToken == "" || providerName == "" {
-		tflog.Info(ctx, "either TFC_WORKLOAD_IDENTITY_TOKEN or provider name is not set")
-		return "", nil
+	if providerName == "" {
+		return "", fmt.Errorf("provider name is not set")
+	}
+
+	tfcWorkloadIdentityTokenEnvVars := []string{"TFC_WORKLOAD_IDENTITY_TOKEN"}
+	if credentialTag != "" {
+		tfcWorkloadIdentityTokenEnvVars = append(
+			tfcWorkloadIdentityTokenEnvVars,
+			fmt.Sprintf("TFC_WORKLOAD_IDENTITY_TOKEN_%s", credentialTag),
+		)
+	}
+
+	tfcWorkloadIdentityToken := CheckEnvVars(tfcWorkloadIdentityTokenEnvVars, "")
+	if tfcWorkloadIdentityToken == "" {
+		return "", fmt.Errorf("env var %s is not set", strings.Join(tfcWorkloadIdentityTokenEnvVars, " or "))
 	}
 
 	payload := OIDCAccessTokenRequest{
@@ -226,13 +237,13 @@ func GetXrayVersion(client *resty.Client) (string, error) {
 	return xrayVersion.Version, nil
 }
 
-func CheckEnvVars(vars []string, dv string) string {
+func CheckEnvVars(vars []string, defaultValue string) string {
 	for _, k := range vars {
 		if v := os.Getenv(k); v != "" {
 			return v
 		}
 	}
-	return dv
+	return defaultValue
 }
 
 func ExecuteTemplate(name, temp string, fields interface{}) string {
