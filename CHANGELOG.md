@@ -1,3 +1,9 @@
+## 1.27.0 (November 15, 2024)
+
+IMPROVEMENTS:
+
+* Add `JFrogResource` and `JFrogError` structs
+
 ## 1.26.0 (October 15, 2024)
 
 IMPROVEMENTS:
