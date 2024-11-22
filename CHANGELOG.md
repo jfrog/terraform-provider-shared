@@ -1,3 +1,9 @@
+## 1.27.1 (November 22, 2024)
+
+IMPROVEMENTS:
+
+* Upgrade Resty to 2.16.2
+
 ## 1.27.0 (November 15, 2024)
 
 IMPROVEMENTS:
