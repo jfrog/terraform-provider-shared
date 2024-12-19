@@ -14,13 +14,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
-type ProviderMetadata struct {
-	Client             *resty.Client
-	ProductId          string
-	ArtifactoryVersion string
-	XrayVersion        string
-}
-
 func resourceFeatureUsage(resourceName, method string) string {
 	return fmt.Sprintf("Resource/%s/%s", resourceName, method)
 }
