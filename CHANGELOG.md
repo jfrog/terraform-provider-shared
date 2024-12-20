@@ -1,3 +1,9 @@
+## 1.28.0 (December 20, 2024)
+
+IMPROVEMENTS:
+
+* Add `JFrogProvider` and associates functions for Terraform provider interface
+
 ## 1.27.1 (November 22, 2024)
 
 IMPROVEMENTS:
