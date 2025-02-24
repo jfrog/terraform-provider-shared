@@ -1,3 +1,9 @@
+## 1.29.0 (February 24, 2025)
+
+IMPROVEMENTS:
+
+* Add `PreApply` stage to config plan checks func
+
 ## 1.28.0 (December 20, 2024)
 
 IMPROVEMENTS:

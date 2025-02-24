@@ -78,6 +78,9 @@ func MkNames(name, resource string) (int, string, string) {
 
 var ConfigPlanChecks = func(resourceName string) resource.ConfigPlanChecks {
 	return resource.ConfigPlanChecks{
+		PreApply: []plancheck.PlanCheck{
+			DebugPlan(resourceName, "PreApply"),
+		},
 		PostApplyPreRefresh: []plancheck.PlanCheck{
 			DebugPlan(resourceName, "PostApplyPreRefresh"),
 		},
@@ -146,6 +149,12 @@ func (p PlanCheck) CheckPlan(ctx context.Context, req plancheck.CheckPlanRequest
 	}
 
 	var errStrings []string
+	for _, change := range req.Plan.OutputChanges {
+		if !change.Actions.NoOp() {
+			errStrings = append(errStrings, fmt.Sprintf("expected empty plan, but %s has output change(s):\n\nbefore: %v\n\nafter: %v\n\nunknown: %v", change.Actions, change.Before, change.After, change.AfterUnknown))
+		}
+	}
+
 	for _, rc := range req.Plan.ResourceChanges {
 		if !rc.Change.Actions.NoOp() {
 			errStrings = append(errStrings, fmt.Sprintf("expected empty plan, but %s has planned action(s): %v\n\nbefore: %v\n\nafter: %v\n\nunknown: %v", rc.Address, rc.Change.Actions, rc.Change.Before, rc.Change.After, rc.Change.AfterUnknown))
@@ -153,7 +162,7 @@ func (p PlanCheck) CheckPlan(ctx context.Context, req plancheck.CheckPlanRequest
 	}
 
 	if len(errStrings) > 0 {
-		resp.Error = fmt.Errorf(strings.Join(errStrings, "\n"))
+		resp.Error = fmt.Errorf("%s", strings.Join(errStrings, "\n"))
 		return
 	}
 }
