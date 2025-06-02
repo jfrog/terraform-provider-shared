@@ -1,3 +1,9 @@
+## 1.30.0 (June 2, 2025)
+
+BUG FIXES:
+
+* Fixed a validation failure for cron expression for value "0 0 2 ? * SAT"
+
 ## 1.29.0 (February 24, 2025)
 
 IMPROVEMENTS:

@@ -6,12 +6,12 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/gorhill/cronexpr"
 	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
+	"github.com/reugn/go-quartz/quartz"
 	"gopkg.in/ldap.v2"
 )
 
@@ -35,7 +35,7 @@ func LowerCase(value interface{}, key cty.Path) diag.Diagnostics {
 func Cron(value interface{}, _ cty.Path) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	_, err := cronexpr.Parse(value.(string))
+	err := quartz.ValidateCronExpression(value.(string))
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

@@ -26,7 +26,7 @@ func TestIsCron(t *testing.T) {
 			val: types.StringNull(),
 		},
 		"valid": {
-			val: types.StringValue("10/20 15 14 5-10 * ? *"),
+			val: types.StringValue("10/20 12-15 14 ? * SAT"),
 		},
 		"invalid": {
 			val:         types.StringValue("invalid"),
