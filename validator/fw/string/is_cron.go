@@ -3,9 +3,9 @@ package string
 import (
 	"context"
 
-	"github.com/gorhill/cronexpr"
 	"github.com/hashicorp/terraform-plugin-framework-validators/helpers/validatordiag"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/reugn/go-quartz/quartz"
 )
 
 // Ensure our implementation satisfies the validator.String interface.
@@ -28,7 +28,7 @@ func (v cronValidator) ValidateString(ctx context.Context, request validator.Str
 
 	value := request.ConfigValue.ValueString()
 
-	_, err := cronexpr.Parse(value)
+	err := quartz.ValidateCronExpression(value)
 	if err != nil {
 		response.Diagnostics.Append(validatordiag.InvalidAttributeValueMatchDiagnostic(
 			request.Path,
