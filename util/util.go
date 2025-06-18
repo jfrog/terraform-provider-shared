@@ -209,6 +209,27 @@ func GetArtifactoryVersion(client *resty.Client) (string, error) {
 	return artifactoryVersion.Version, nil
 }
 
+func GetAccessVersion(client *resty.Client) (string, error) {
+	type AccessVersion struct {
+		Version string `json:"name"`
+	}
+
+	accessVersion := AccessVersion{}
+	resp, err := client.R().
+		SetResult(&accessVersion).
+		Get("/access/api/v1/system/version")
+
+	if err != nil {
+		return "", fmt.Errorf("failed to get Access version. %s", err)
+	}
+
+	if resp.IsError() {
+		return "", fmt.Errorf("failed to get Access version. %s", resp.String())
+	}
+
+	return accessVersion.Version, nil
+}
+
 func GetXrayVersion(client *resty.Client) (string, error) {
 	type XrayVersion struct {
 		Version string `json:"xray_version"`
