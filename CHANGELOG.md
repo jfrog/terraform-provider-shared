@@ -1,3 +1,9 @@
+## 1.30.1 (June 18, 2025)
+
+IMPROVEMENTS:
+
+* Added `GetAccessVersion` function to retrieve the instance version from Access.
+
 ## 1.30.0 (June 2, 2025)
 
 BUG FIXES:

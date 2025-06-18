@@ -25,6 +25,7 @@ type ProviderMetadata struct {
 	Client             *resty.Client
 	ProductId          string
 	ArtifactoryVersion string
+	AccessVersion      string
 	XrayVersion        string
 }
 
@@ -125,12 +126,38 @@ func (p *JFrogProvider) Configure(ctx context.Context, req provider.ConfigureReq
 		go SendUsage(ctx, restyClient.R(), p.ProductID, featureUsage)
 	}
 
+	accessVersion := ""
+	if len(accessToken) > 0 {
+		_, err = client.AddAuth(restyClient, "", accessToken)
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Error adding Auth to Resty client",
+				err.Error(),
+			)
+			return
+		}
+
+		version, err := GetAccessVersion(restyClient)
+		if err != nil {
+			resp.Diagnostics.AddWarning(
+				"Error getting Access version",
+				fmt.Sprintf("Provider functionality might be affected by the absence of Access version. %v", err),
+			)
+		}
+
+		accessVersion = version
+
+		featureUsage := fmt.Sprintf("Terraform/%s", req.TerraformVersion)
+		go SendUsage(ctx, restyClient.R(), p.ProductID, featureUsage)
+	}
+
 	featureUsage := fmt.Sprintf("Terraform/%s", req.TerraformVersion)
 	go SendUsage(ctx, restyClient.R(), p.ProductID, featureUsage)
 
 	meta := ProviderMetadata{
 		Client:             restyClient,
 		ArtifactoryVersion: artifactoryVersion,
+		AccessVersion:      accessVersion,
 		ProductId:          p.ProductID,
 	}
 
