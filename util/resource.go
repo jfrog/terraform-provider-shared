@@ -11,6 +11,7 @@ type JFrogResource struct {
 	ProviderData            *ProviderMetadata
 	TypeName                string
 	ValidArtifactoryVersion string
+	ValidXrayVersion        string
 	DocumentEndpoint        string
 	CollectionEndpoint      string
 }
@@ -45,6 +46,27 @@ func (r JFrogResource) ValidateConfig(ctx context.Context, req resource.Validate
 		resp.Diagnostics.AddError(
 			"Incompatible Artifactory version",
 			fmt.Sprintf("This resource is only supported by Artifactory version %s or later.", r.ValidArtifactoryVersion),
+		)
+	}
+}
+
+func (r JFrogResource) ValidateXrayConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	if r.ProviderData == nil || r.ValidXrayVersion == "" {
+		return
+	}
+
+	valid, err := CheckVersion(r.ProviderData.XrayVersion, r.ValidXrayVersion)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Failed to verify Xray version",
+			err.Error(),
+		)
+	}
+
+	if !valid {
+		resp.Diagnostics.AddError(
+			"Incompatible Xray version",
+			fmt.Sprintf("This resource is only supported by Xray version %s or later.", r.ValidXrayVersion),
 		)
 	}
 }

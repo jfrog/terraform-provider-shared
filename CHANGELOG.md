@@ -1,3 +1,9 @@
+## 1.30.2 (July 29, 2025)
+
+IMPROVEMENTS:
+
+* Added func `ValidateXrayConfig` to check xray version supported
+
 ## 1.30.1 (June 18, 2025)
 
 IMPROVEMENTS:
