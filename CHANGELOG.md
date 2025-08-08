@@ -1,3 +1,9 @@
+## 1.30.3 (Aug 08, 2025)
+
+IMPROVEMENTS:
+
+* Added func `ValidateCatalogHealth` to check catalog health
+
 ## 1.30.2 (July 29, 2025)
 
 IMPROVEMENTS:

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"regexp"
 	"strings"
@@ -249,6 +250,76 @@ func GetXrayVersion(client *resty.Client) (string, error) {
 	}
 
 	return xrayVersion.Version, nil
+}
+
+func CheckCatalogHealth(client *resty.Client) error {
+	type CatalogEntitlements struct {
+		EntitledForCatalog bool `json:"entitled_for_catalog"`
+		HasCentralToken    bool `json:"has_central_token"`
+		TokenExpired       bool `json:"token_expired"`
+	}
+
+	type CatalogCentral struct {
+		CentralConnectionWorking bool `json:"central_connection_working"`
+	}
+
+	type CatalogHealthResponse struct {
+		Entitlements        CatalogEntitlements `json:"entitlements"`
+		Central             CatalogCentral      `json:"central"`
+		DbConnectionWorking bool                `json:"db_connection_working"`
+		OneModelAvailable   bool                `json:"one_model_available"`
+		Code                string              `json:"code"`
+	}
+
+	catalogHealth := CatalogHealthResponse{}
+	resp, err := client.R().
+		SetResult(&catalogHealth).
+		Get("/catalog/api/v1/system/app_health")
+
+	if err != nil {
+		log.Printf("[DEBUG] Catalog health check failed with error: %s", err.Error())
+		return fmt.Errorf("failed to validate catalog health. %s", err)
+	}
+
+	if resp.IsError() {
+		log.Printf("[ERROR] Catalog health check returned error response: %s", resp.String())
+		return fmt.Errorf("failed to validate catalog health. %s", resp.String())
+	}
+
+	// Check if catalog is healthy
+	if catalogHealth.Code != "OK" {
+		log.Printf("[ERROR] Catalog health check failed with code: %s", catalogHealth.Code)
+		return fmt.Errorf("catalog health check failed with code: %s", catalogHealth.Code)
+	}
+
+	// Check entitlements
+	if !catalogHealth.Entitlements.EntitledForCatalog {
+		log.Printf("[ERROR] Catalog is not entitled for use")
+		return fmt.Errorf("catalog is not entitled for use")
+	}
+
+	if catalogHealth.Entitlements.TokenExpired {
+		log.Printf("[ERROR] Catalog token has expired")
+		return fmt.Errorf("catalog token has expired")
+	}
+
+	// Check connections
+	if !catalogHealth.DbConnectionWorking {
+		log.Printf("[ERROR] Catalog database connection is not working")
+		return fmt.Errorf("catalog database connection is not working")
+	}
+
+	if !catalogHealth.Central.CentralConnectionWorking {
+		log.Printf("[ERROR] Catalog central connection is not working")
+		return fmt.Errorf("catalog central connection is not working")
+	}
+
+	if !catalogHealth.OneModelAvailable {
+		log.Printf("[ERROR] Catalog model is not available")
+		return fmt.Errorf("catalog model is not available")
+	}
+
+	return nil
 }
 
 func CheckEnvVars(vars []string, defaultValue string) string {
