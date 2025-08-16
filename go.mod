@@ -1,6 +1,6 @@
 module github.com/jfrog/terraform-provider-shared
 
-go 1.23.0
+go 1.24.0
 
 toolchain go1.24.4
 
@@ -11,7 +11,7 @@ require (
 	github.com/hashicorp/terraform-plugin-framework v1.15.1
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.37.0
-	github.com/hashicorp/terraform-plugin-testing v1.13.2
+	github.com/hashicorp/terraform-plugin-testing v1.13.3
 	github.com/reugn/go-quartz v0.15.1
 	gopkg.in/ldap.v2 v2.5.1
 )
@@ -25,7 +25,7 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/tools v0.36.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250804133106-a7a43d27e69b // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250811230008-5f3141c8851a // indirect
 )
 
 require (
@@ -38,13 +38,13 @@ require (
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-hclog v1.6.3 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
-	github.com/hashicorp/go-plugin v1.6.3 // indirect
+	github.com/hashicorp/go-plugin v1.7.0 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hashicorp/hc-install v0.9.2 // indirect
 	github.com/hashicorp/hcl/v2 v2.24.0 // indirect
 	github.com/hashicorp/logutils v1.0.0 // indirect
 	github.com/hashicorp/terraform-exec v0.23.0 // indirect
-	github.com/hashicorp/terraform-json v0.25.0
+	github.com/hashicorp/terraform-json v0.26.0
 	github.com/hashicorp/terraform-plugin-framework-validators v0.18.0
 	github.com/hashicorp/terraform-plugin-go v0.28.0 // indirect
 	github.com/hashicorp/terraform-registry-address v0.3.0 // indirect
@@ -62,7 +62,7 @@ require (
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/zclconf/go-cty v1.16.3 // indirect
 	golang.org/x/crypto v0.41.0 // indirect
-	golang.org/x/exp v0.0.0-20250718183923-645b1fa84792
+	golang.org/x/exp v0.0.0-20250813145105-42675adae3e6
 	golang.org/x/mod v0.27.0 // indirect
 	golang.org/x/net v0.43.0 // indirect
 	golang.org/x/sys v0.35.0 // indirect

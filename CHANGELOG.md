@@ -1,3 +1,9 @@
+## 1.30.4 (Aug 16, 2025)
+
+BUG FIXES:
+
+* Fix `ValidateCatalogHealth` to check catalog health
+
 ## 1.30.3 (Aug 08, 2025)
 
 IMPROVEMENTS:
