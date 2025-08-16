@@ -79,7 +79,7 @@ func (r JFrogResource) ValidateXrayConfig(ctx context.Context, req resource.Vali
 
 // ValidateCatalogHealth performs catalog health check when provider data becomes available
 func (r JFrogResource) ValidateCatalogHealth(providerData *ProviderMetadata) error {
-	
+
 	if providerData == nil {
 		log.Printf("[DEBUG] ValidateCatalogHealth: ProviderData is nil, skipping")
 		return nil
@@ -96,5 +96,5 @@ func (r JFrogResource) ValidateCatalogHealth(providerData *ProviderMetadata) err
 		}
 	})
 
-	return nil
+	return catalogHealthError
 }
