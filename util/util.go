@@ -126,7 +126,7 @@ func OIDCTokenExchange(ctx context.Context, client *resty.Client, providerName, 
 	}
 
 	if response.IsError() {
-		return "", fmt.Errorf(response.String())
+		return "", fmt.Errorf("OIDC token exchange failed: %s", response.String())
 	}
 
 	return result.AccessToken, nil
@@ -187,6 +187,46 @@ func CheckVersion(versionToCheck string, supportedVersion string) (bool, error) 
 	}
 
 	return v1.GreaterThanOrEqual(v2), nil
+}
+
+func CheckXrayVersion(client *resty.Client, minVersion string, customMessage string) (string, error) {
+	// Skip version check if disabled via environment variable
+	if GetBoolEnvVar([]string{"XRAY_SKIP_VERSION_CHECK"}, false) {
+		return "", nil
+	}
+
+	type versionCheckError struct {
+		currentVersion string
+		minVersion     string
+		customMessage  string
+	}
+
+	vErr := func(current, min, msg string) error {
+		err := &versionCheckError{
+			currentVersion: current,
+			minVersion:     min,
+			customMessage:  msg,
+		}
+		if err.customMessage != "" {
+			return fmt.Errorf(err.customMessage, err.minVersion, err.currentVersion)
+		}
+		return fmt.Errorf("xray version %s is not supported - minimum required version is %s", err.currentVersion, err.minVersion)
+	}
+	version, err := GetXrayVersion(client)
+	if err != nil {
+		return "", fmt.Errorf("failed to get Xray version: %v", err)
+	}
+
+	supported, err := CheckVersion(version, minVersion)
+	if err != nil {
+		return version, fmt.Errorf("failed to check version compatibility: %v", err)
+	}
+
+	if !supported {
+		return version, vErr(version, minVersion, customMessage)
+	}
+
+	return version, nil
 }
 
 func GetArtifactoryVersion(client *resty.Client) (string, error) {
@@ -326,6 +366,15 @@ func CheckEnvVars(vars []string, defaultValue string) string {
 	for _, k := range vars {
 		if v := os.Getenv(k); v != "" {
 			return v
+		}
+	}
+	return defaultValue
+}
+
+func GetBoolEnvVar(vars []string, defaultValue bool) bool {
+	for _, k := range vars {
+		if v := os.Getenv(k); v != "" {
+			return v == "true"
 		}
 	}
 	return defaultValue

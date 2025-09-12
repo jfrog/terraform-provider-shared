@@ -1,3 +1,11 @@
+## 1.30.5 (Sep 11, 2025)
+
+IMPROVEMENTS:
+
+* Added cronScheduleValidator function using robfig/cron/v3 for Xray reports
+
+* Added GetBoolEnvVar function to support the XRAY_SKIP_VERSION_CHECK environment variable
+
 ## 1.30.4 (Aug 16, 2025)
 
 BUG FIXES:
