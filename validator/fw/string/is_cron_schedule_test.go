@@ -249,3 +249,103 @@ func TestIsCronSchedule(t *testing.T) {
 		})
 	}
 }
+
+func TestIsCronScheduleTimezone(t *testing.T) {
+	t.Parallel()
+
+	type testCase struct {
+		val         types.String
+		expectError bool
+	}
+	tests := map[string]testCase{
+		// Null/Unknown handling
+		"unknown": {
+			val: types.StringUnknown(),
+		},
+		"null": {
+			val: types.StringNull(),
+		},
+
+		// Valid timezones
+		"valid_utc": {
+			val: types.StringValue("UTC"),
+		},
+		"valid_gmt": {
+			val: types.StringValue("GMT"),
+		},
+		"valid_est": {
+			val: types.StringValue("EST"),
+		},
+		"valid_america_new_york": {
+			val: types.StringValue("America/New_York"),
+		},
+		"valid_europe_london": {
+			val: types.StringValue("Europe/London"),
+		},
+		"valid_asia_tokyo": {
+			val: types.StringValue("Asia/Tokyo"),
+		},
+		"valid_australia_sydney": {
+			val: types.StringValue("Australia/Sydney"),
+		},
+		"valid_pacific_auckland": {
+			val: types.StringValue("Pacific/Auckland"),
+		},
+
+		// Invalid timezones
+		"invalid_empty": {
+			val:         types.StringValue(""),
+			expectError: true,
+		},
+		"invalid_spaces": {
+			val:         types.StringValue("   "),
+			expectError: true,
+		},
+		"invalid_timezone": {
+			val:         types.StringValue("Invalid/Timezone"),
+			expectError: true,
+		},
+		"invalid_format": {
+			val:         types.StringValue("UTC+01:00"),
+			expectError: true,
+		},
+		"invalid_numeric": {
+			val:         types.StringValue("+0100"),
+			expectError: true,
+		},
+		"invalid_case": {
+			val:         types.StringValue("utc"),
+			expectError: false, // time.LoadLocation accepts case-insensitive timezone names
+		},
+		"invalid_partial": {
+			val:         types.StringValue("America"),
+			expectError: true,
+		},
+		"invalid_special_chars": {
+			val:         types.StringValue("UTC!"),
+			expectError: true,
+		},
+	}
+
+	for name, test := range tests {
+		name, test := name, test
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			request := validator.StringRequest{
+				Path:           path.Root("test"),
+				PathExpression: path.MatchRoot("test"),
+				ConfigValue:    test.val,
+			}
+			response := validator.StringResponse{}
+			validatorfw_string.IsCronScheduleTimezone().ValidateString(context.TODO(), request, &response)
+
+			if !response.Diagnostics.HasError() && test.expectError {
+				t.Fatal("expected error, got no error")
+			}
+
+			if response.Diagnostics.HasError() && !test.expectError {
+				t.Fatalf("got unexpected error: %s", response.Diagnostics)
+			}
+		})
+	}
+}

@@ -194,3 +194,49 @@ func validateHour(value string) (bool, string) {
 func IsCronSchedule() validator.String {
 	return &cronScheduleValidator{}
 }
+
+// Ensure our implementation satisfies the validator.String interface.
+var _ validator.String = &cronScheduleTimezoneValidator{}
+
+type cronScheduleTimezoneValidator struct{}
+
+func (v cronScheduleTimezoneValidator) Description(_ context.Context) string {
+	return "value must be a valid IANA timezone name (e.g., UTC, America/New_York, Europe/London)"
+}
+
+func (v cronScheduleTimezoneValidator) MarkdownDescription(ctx context.Context) string {
+	return v.Description(ctx)
+}
+
+func (v cronScheduleTimezoneValidator) ValidateString(ctx context.Context, request validator.StringRequest, response *validator.StringResponse) {
+	if request.ConfigValue.IsNull() || request.ConfigValue.IsUnknown() {
+		return
+	}
+
+	value := request.ConfigValue.ValueString()
+
+	if value == "" {
+		response.Diagnostics.Append(validatordiag.InvalidAttributeValueDiagnostic(
+			request.Path,
+			"Invalid timezone",
+			"empty value. Must be a valid IANA timezone. For valid timezone formats, see: https://timeapi.io/documentation/iana-timezones",
+		))
+		return
+	}
+
+	// Check if the timezone actually exists in the IANA database
+	_, err := time.LoadLocation(value)
+	if err != nil {
+		response.Diagnostics.Append(validatordiag.InvalidAttributeValueDiagnostic(
+			request.Path,
+			"Invalid timezone",
+			fmt.Sprintf("%s. Must be a valid IANA timezone. For valid timezone formats, see: https://timeapi.io/documentation/iana-timezones", value),
+		))
+	}
+}
+
+// IsCronScheduleTimezone returns a validator which ensures that any configured string
+// value is a valid IANA timezone name (e.g., UTC, America/New_York, Europe/London).
+func IsCronScheduleTimezone() validator.String {
+	return &cronScheduleTimezoneValidator{}
+}

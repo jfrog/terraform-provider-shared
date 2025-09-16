@@ -191,7 +191,7 @@ func CheckVersion(versionToCheck string, supportedVersion string) (bool, error) 
 
 func CheckXrayVersion(client *resty.Client, minVersion string, customMessage string) (string, error) {
 	// Skip version check if disabled via environment variable
-	if GetBoolEnvVar([]string{"XRAY_SKIP_VERSION_CHECK"}, false) {
+	if GetBoolEnvVar([]string{"SKIP_XRAY_VERSION_CHECK"}, false) {
 		return "", nil
 	}
 
