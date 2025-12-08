@@ -282,6 +282,15 @@ func TestIsCronScheduleTimezone(t *testing.T) {
 		"valid_europe_london": {
 			val: types.StringValue("Europe/London"),
 		},
+		"valid_europe_zurich": {
+			val: types.StringValue("Europe/Zurich"),
+		},
+		"valid_europe_paris": {
+			val: types.StringValue("Europe/Paris"),
+		},
+		"valid_europe_berlin": {
+			val: types.StringValue("Europe/Berlin"),
+		},
 		"valid_asia_tokyo": {
 			val: types.StringValue("Asia/Tokyo"),
 		},

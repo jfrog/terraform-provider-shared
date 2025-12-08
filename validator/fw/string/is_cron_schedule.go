@@ -7,6 +7,10 @@ import (
 	"strings"
 	"time"
 
+	// Embed IANA timezone database for consistent timezone validation
+	// across all platforms (especially Windows which lacks native IANA support)
+	_ "time/tzdata"
+
 	"github.com/hashicorp/terraform-plugin-framework-validators/helpers/validatordiag"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/robfig/cron/v3"

@@ -1,3 +1,9 @@
+## 1.30.7 (Dec 08, 2025)
+
+BUG FIXES:
+
+* Fixed timezone validation failing on Windows by embedding IANA timezone database (`time/tzdata`) in `IsCronScheduleTimezone` validator
+
 ## 1.30.6 (Sep 16, 2025)
 
 IMPROVEMENTS:
