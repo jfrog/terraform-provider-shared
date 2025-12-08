@@ -1,0 +1,48 @@
+terraform-provider-shared
+Copyright 2025 JFrog Ltd.
+
+This software uses the following third-party libraries:
+
+HashiCorp Terraform Plugin Framework:
+- github.com/hashicorp/terraform-plugin-framework - https://github.com/hashicorp/terraform-plugin-framework - Licensed under Mozilla Public License 2.0
+- github.com/hashicorp/terraform-plugin-framework-validators - https://github.com/hashicorp/terraform-plugin-framework-validators - Licensed under Mozilla Public License 2.0
+- github.com/hashicorp/terraform-plugin-sdk/v2 - https://github.com/hashicorp/terraform-plugin-sdk - Licensed under Mozilla Public License 2.0
+- github.com/hashicorp/terraform-plugin-testing - https://github.com/hashicorp/terraform-plugin-testing - Licensed under Mozilla Public License 2.0
+
+HashiCorp Core Libraries:
+- github.com/hashicorp/terraform-plugin-go - https://github.com/hashicorp/terraform-plugin-go - Licensed under Mozilla Public License 2.0
+- github.com/hashicorp/terraform-plugin-log - https://github.com/hashicorp/terraform-plugin-log - Licensed under Mozilla Public License 2.0
+- github.com/hashicorp/terraform-json - https://github.com/hashicorp/terraform-json - Licensed under Mozilla Public License 2.0
+- github.com/hashicorp/go-version - https://github.com/hashicorp/go-version - Licensed under Mozilla Public License 2.0
+- github.com/hashicorp/go-cty - https://github.com/hashicorp/go-cty - Licensed under Mozilla Public License 2.0
+- github.com/hashicorp/hcl/v2 - https://github.com/hashicorp/hcl - Licensed under Mozilla Public License 2.0
+
+Go Standard Library Extensions:
+- golang.org/x/crypto - https://github.com/golang/crypto - Licensed under BSD 3-Clause License
+- golang.org/x/mod - https://github.com/golang/mod - Licensed under BSD 3-Clause License
+- golang.org/x/net - https://github.com/golang/net - Licensed under BSD 3-Clause License
+- golang.org/x/exp - https://github.com/golang/exp - Licensed under BSD 3-Clause License
+- golang.org/x/sync - https://github.com/golang/sync - Licensed under BSD 3-Clause License
+- golang.org/x/text - https://github.com/golang/text - Licensed under BSD 3-Clause License
+
+Protocol Buffers and gRPC:
+- google.golang.org/protobuf - https://github.com/protocolbuffers/protobuf-go - Licensed under BSD 3-Clause License
+- google.golang.org/grpc - https://github.com/grpc/grpc-go - Licensed under Apache License 2.0
+
+HTTP Client:
+- github.com/go-resty/resty/v2 - https://github.com/go-resty/resty - Licensed under MIT License
+
+Cron and Scheduling:
+- github.com/robfig/cron/v3 - https://github.com/robfig/cron - Licensed under MIT License
+- github.com/reugn/go-quartz - https://github.com/reugn/go-quartz - Licensed under MIT License
+
+LDAP:
+- gopkg.in/ldap.v2 - https://github.com/go-ldap/ldap - Licensed under MIT License
+
+Utilities:
+- github.com/samber/lo - https://github.com/samber/lo - Licensed under MIT License
+- github.com/google/go-cmp - https://github.com/google/go-cmp - Licensed under BSD 3-Clause License
+- github.com/zclconf/go-cty - https://github.com/zclconf/go-cty - Licensed under MIT License
+
+Any modifications or contributions to this software should include appropriate attributions as described in the above licenses.
+
