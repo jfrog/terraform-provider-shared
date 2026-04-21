@@ -17,6 +17,8 @@ package util
 import (
 	"context"
 	"fmt"
+	"os"
+	"strings"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -82,6 +84,13 @@ func (p *JFrogProvider) Configure(ctx context.Context, req provider.ConfigureReq
 			err.Error(),
 		)
 		return
+	}
+
+	if strings.EqualFold(os.Getenv("JFROG_BYPASS_TLS_VERIFICATION"), "true") {
+		resp.Diagnostics.AddWarning(
+			"TLS Verification Bypassed",
+			"JFROG_BYPASS_TLS_VERIFICATION is set to 'true'. TLS certificate verification is disabled. This is insecure and should only be used for testing with self-signed certificates.",
+		)
 	}
 
 	oidcProviderName := config.OIDCProviderName.ValueString()

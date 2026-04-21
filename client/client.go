@@ -15,6 +15,7 @@
 package client
 
 import (
+	"crypto/tls"
 	"fmt"
 	"net/url"
 	"os"
@@ -57,6 +58,10 @@ func Build(URL, productId string) (*resty.Client, error) {
 		SetRetryCount(20)
 
 	restyBase.DisableWarn = true
+
+	if strings.EqualFold(os.Getenv("JFROG_BYPASS_TLS_VERIFICATION"), "true") {
+		restyBase.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
+	}
 
 	return restyBase, nil
 }
