@@ -1,3 +1,37 @@
+## 1.30.8 (August 20, 2026)
+
+SECURITY:
+
+* Remediated CVE-2026-1229 by upgrading `github.com/cloudflare/circl` to v1.6.5
+* Remediated CVE-2026-46598 by upgrading `golang.org/x/crypto` to v0.55.0
+* Remediated CVE-2026-39835 by upgrading `golang.org/x/crypto` to v0.55.0
+* Remediated CVE-2026-39827 by upgrading `golang.org/x/crypto` to v0.55.0
+* Remediated CVE-2026-39828 by upgrading `golang.org/x/crypto` to v0.55.0
+* Remediated CVE-2026-46597 by upgrading `golang.org/x/crypto` to v0.55.0
+* Remediated CVE-2026-39829 by upgrading `golang.org/x/crypto` to v0.55.0
+* Remediated CVE-2026-39830 by upgrading `golang.org/x/crypto` to v0.55.0
+* Remediated CVE-2026-39831 by upgrading `golang.org/x/crypto` to v0.55.0
+* Remediated CVE-2026-39832 by upgrading `golang.org/x/crypto` to v0.55.0
+* Remediated CVE-2026-39833 by upgrading `golang.org/x/crypto` to v0.55.0
+* Remediated CVE-2026-39834 by upgrading `golang.org/x/crypto` to v0.55.0
+* Remediated CVE-2026-42508 by upgrading `golang.org/x/crypto` to v0.55.0
+* Remediated CVE-2026-46595 by upgrading `golang.org/x/crypto` to v0.55.0
+* Remediated CVE-2026-27136 by upgrading `golang.org/x/net` to v0.58.0
+* Remediated CVE-2026-25681 by upgrading `golang.org/x/net` to v0.58.0
+* Remediated CVE-2026-42502 by upgrading `golang.org/x/net` to v0.58.0
+* Remediated CVE-2026-42506 by upgrading `golang.org/x/net` to v0.58.0
+* Remediated CVE-2026-25680 by upgrading `golang.org/x/net` to v0.58.0
+* Remediated CVE-2026-56853 by upgrading Go to 1.25.13
+* Remediated CVE-2026-56858 by upgrading Go to 1.25.13
+* Remediated CVE-2026-56860 by upgrading Go to 1.25.13
+* Remediated CVE-2026-56859 by upgrading Go to 1.25.13
+* Remediated CVE-2026-56862 by upgrading Go to 1.25.13
+* Remediated CVE-2026-46600 by upgrading Go to 1.25.13
+* Remediated CVE-2026-33818 by upgrading Go to 1.25.13
+* Remediated CVE-2026-56864 by upgrading Go to 1.25.13
+* Remediated CVE-2026-56865 by upgrading Go to 1.25.13
+* Remediated CVE-2026-39821 by upgrading Go to 1.25.13 and `golang.org/x/net` to v0.58.0
+
 ## 1.30.7 (Dec 08, 2025)
 
 BUG FIXES:
